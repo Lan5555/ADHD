@@ -306,7 +306,6 @@ const TimerPage: React.FC = () => {
             }}
           />
         </Fab>
-        <div className="flex justify-center items-center">
         <ToolBar
           type={"question"}
           content={
@@ -349,7 +348,6 @@ const TimerPage: React.FC = () => {
           onPressed={(index) => handleToolkitClick(index)}
         />
         </div>
-      </div>
     </>
   );
 };
