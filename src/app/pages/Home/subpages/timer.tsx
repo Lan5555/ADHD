@@ -180,19 +180,19 @@ const TimerPage: React.FC = () => {
         seconds={0}
         strokeWidth={10}
         colors={["#5F29CC", "#5F29CC", "#5F29CC"]}
-        size={250}
+        size={200}
         startTimestamp={currentTimerData?.startTimestamp}
         onComplete={() => alert(`Timer ${currentKey} completed`)}
       />
     ) : (
       <div className="flex flex-col items-center gap-3">
-        <h3 className="text-sm opacity-70">Ready to start: {currentTimerData.time}</h3>
+        <h3 className="text-[10pt] opacity-70">Ready to start: {currentTimerData.time}</h3>
         <Button variant="contained" sx={{
              mt: 2 ,
              backgroundColor: ThemeColor.primary,
              color:ThemeColor.white
              }} onClick={startTimer} 
-        color={'inherit'}>
+           color={'inherit'}>
           Start Timer
         </Button>
       </div>
