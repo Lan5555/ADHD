@@ -2,7 +2,7 @@
 import { useWatch } from "@/app/hooks/page_index";
 import Register from "./register";
 import LoginPage from "./login";
-import MobileLayout from "@/app/layouts/mobile/page";
+import MobileLayout from "@/app/layouts/page";
 import { CircularProgress } from "@mui/material";
 import { useEffect } from "react";
 import { ThemeColor } from "@/app/static/colors";
