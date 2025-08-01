@@ -20,7 +20,7 @@ const RenderSignUp: React.FC = () => {
         <CircularProgress sx={{
           color:'white'
         }} />
-        <h2 className="text-white">Retrieving previous state!</h2>
+        <h2 className="text-white text-sm">Retrieving previous state!</h2>
       </div>
     );
   }
