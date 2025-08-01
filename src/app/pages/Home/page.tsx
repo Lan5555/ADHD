@@ -8,7 +8,6 @@ const HomePage:React.FC = () => {
     return <>
         <WatchProvider>
             <RenderSignUp/>
-            {/* <MobileLayout/> */}
             <ToastContainer/>
         </WatchProvider>
     </>

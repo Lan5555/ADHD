@@ -35,4 +35,4 @@ const RenderSignUp: React.FC = () => {
   }
 };
 
-export default RenderSignUp;
+export default RenderSignUp
