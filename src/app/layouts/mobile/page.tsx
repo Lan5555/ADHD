@@ -72,7 +72,6 @@ const MobileLayout:React.FC = () => {
     {/* Page initial */}
         <div className="w-full">
             <AppBar
-             leading={faBars}
              title={'Clarity tasks'}
              trailing={[
                 faBell,
@@ -84,21 +83,20 @@ const MobileLayout:React.FC = () => {
                 setCount(taskCount + 1); 
              }}
             />
-
             {/* Body */}
             <div
-                ref={divRef} 
-                className={`${
-                (currentPageIndex === 0 && Object.keys(keyValue).length > 4)
-                ? 'mt-14': (currentPageIndex === 0 && Object.keys(keyValue).length < 4)
-                ? 'mt-4':'mt-10'} px-4 py-6`
-            }>
-                
-            {currentPageIndex < pages.length ? pages[currentPageIndex] : 
+            ref={divRef}
+            className="px-4 py-6 overflow-auto max-h-[80vh] mt-10"
+                >
+                {currentPageIndex < pages.length ? (
+                pages[currentPageIndex]
+            ) : (
             <div className="flex justify-center items-center h-[95vh]">
-                <h1>No Page yet</h1>
-            </div>}
+            <h1>No Page yet</h1>
             </div>
+            )}
+        </div>
+
             {/* End */}
         
               <SizedBox height={100}/>

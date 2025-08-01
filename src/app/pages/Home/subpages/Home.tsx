@@ -216,7 +216,7 @@ useEffect(() => {
                 }
                 title={element['time']}
                 titleStyle={{
-                    fontSize:'11pt'
+                    fontSize:'9pt'
                 }}
                 Bold={true}
                 subtitle={element['description']}
@@ -270,7 +270,7 @@ useEffect(() => {
                 <img src={'/dart.png'} alt="Clarity Logo" className="w-24 h-24 rounded-full absolute right-5 bottom-1 -rotate-6"/>
 
                 <h1 className="text-white font-bold text-xl ml-2 font-serif">Hello  &nbsp;{userName}!</h1>
-                <p className="text-white opacity-75 ml-2 text-sm">You've completed {taskCount} out of {taskLength}<br /> created tasks!</p>
+                <p className="text-white opacity-75 ml-2 text-[10pt]">You've completed {taskCount} out of {taskLength}<br /> created tasks!</p>
                 <SizedBox height={20}/>
                 <Progress width={'65%'} height={'10px'} color={'white'} textColor={'black'} progressWidth={`${(taskCount / taskLength) * 100 }%`} text={`${Math.ceil((taskCount / taskLength) * 100) || 0}`}/>
             </div>
@@ -285,7 +285,7 @@ useEffect(() => {
                         borderBottomRightRadius:'20px'
                      }}>
                         <img src={'/list.png'} style={{height:'20px',width:'20px'}} />
-                        <p className="text-blue-300">Tasks</p>
+                        <p className="text-blue-300 text-sm">Tasks</p>
                     </div>
                <SizedBox height={20}/>
                {/* Begin */}
@@ -319,7 +319,7 @@ useEffect(() => {
                         borderBottomRightRadius:'20px'
                      }}>
                         <img src={'/3d-alarm.png'} style={{...imgIcon}} />
-                        <p className="text-blue-300">Timers</p>
+                        <p className="text-blue-300 text-sm">Timers</p>
                 </div>
                 <SizedBox height={35}/>
                 {Object.keys(timer).length > 0 ? (

@@ -19,7 +19,7 @@ const TimerPage: React.FC = () => {
 
   const [timers, setTimers] = useState<Record<string, { time: string; description?: string; startTimestamp?: number }>>({});
   const [currentTimerIndex, setCurrentTimerIndex] = useState(0);
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
  
 
@@ -286,7 +286,7 @@ const TimerPage: React.FC = () => {
             }}
           />
         </Fab>
-
+        <div className="flex justify-center items-center">
         <ToolBar
           type={"question"}
           content={
@@ -328,6 +328,7 @@ const TimerPage: React.FC = () => {
           }
           onPressed={(index) => handleToolkitClick(index)}
         />
+        </div>
       </div>
     </>
   );

@@ -8,7 +8,8 @@ import MobileLayout from "@/app/layouts/mobile/page";
 const HomePage:React.FC = () => {
     return <>
        
-            <RenderSignUp/>
+            {/* <RenderSignUp/> */}
+            <MobileLayout/>
             <ToastContainer/>
     </>
 }

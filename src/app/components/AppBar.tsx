@@ -1,9 +1,9 @@
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core"
-import { faHome } from "@fortawesome/free-solid-svg-icons"
+import { faHome, faUser } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 interface props{
-    leading:IconDefinition,
+    leading?:IconDefinition,
     title:String,
     subtitle?:String
     trailing:IconDefinition[],
@@ -16,11 +16,11 @@ const AppBar:React.FC<props> = ({leading,title,subtitle,trailing, onTrailingPres
     }}>
         <div className="flex justify-center items-center gap-3 pl-3">
 
-            <FontAwesomeIcon icon={leading} onClick={() => {
+            {leading && <FontAwesomeIcon icon={leading || faUser} onClick={() => {
             if(onLeadingPressed){
                 onLeadingPressed();
             }
-            }} className="text-black"/>
+            }} className="text-black"/>}
             <h1 className="text-black font-bold font-serif">{title}</h1>
         </div>
         {subtitle === null ? null : (<small>{subtitle}</small>)}

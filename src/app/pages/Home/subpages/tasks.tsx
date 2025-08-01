@@ -274,7 +274,12 @@ useEffect(() => {
        <div className="w-full rounded-2xl shadow p-2 relative">
         <h2 className="text-gray-400 text-sm">Upcoming tasks: {taskLength}</h2>
         {Object.keys(tasks).length > 0 ? (FetchTasksOnLoad()) : (
-          <div className="h-20 flex flex-col justify-center items-center w-full gap-3.5 opacity-40" onClick={() => setCurrentPageIndex(1)}>
+          <div className="h-20 flex flex-col justify-center items-center w-full gap-3.5 opacity-40" onClick={() => {
+            setCurrentPageIndex(1);
+            setToolBarShown(true);
+            showOverlay(true);
+            
+            }}>
             <FontAwesomeIcon
               icon={faPlus}
               opacity={0.5}
@@ -320,12 +325,13 @@ useEffect(() => {
            }
            />
         </Fab>
-        <ToolBar content={<div className="flex justify-center items-center flex-col gap-1 w-60">
-          <h4 className="text-sm mb-2">Task description</h4>
-          <input type="text" placeholder="Enter task description" className="w-full p-2 rounded-xl bg-gray-100 outline-none border-none" style={{
+        <div className="flex justify-center items-center">
+        <ToolBar content={<div className="flex justify-center items-center flex-col gap-5 w-60">
+          <h4 className="text-sm">Task description</h4>
+          <input type="text" placeholder="Enter task description" className="w-full p-2 rounded-xl bg-gray-100 outline-none border-none text-sm" style={{
             paddingLeft: '10px',
           }} onChange={(el) => setNameValue(el.target.value)}/>
-          <label htmlFor="set-category" className="text-sm mb-2">Select Category</label>
+          <label htmlFor="set-category" className="text-sm">Select Category</label>
           <select name="category" className="w-full p-2 rounded-lg bg-gray-100 outline-none border-none" id="set-category" onChange={(val) => setCategory(val.target.value)}>
             <option value="chores">Chores</option>
             <option value="work">Work</option>
@@ -333,7 +339,7 @@ useEffect(() => {
             <option value="other">Other</option>
           </select>
         </div>} type={'question'} onPressed={(index) => HandleTaskChange(index)}/>
-
+            </div>
             <Overlay/>
             <ShowBottomSheet style={{
               bottom: !showSheet ? '-500px' : '0px',
