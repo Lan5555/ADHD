@@ -93,6 +93,7 @@ useEffect(() => {
 
   const target = doc(db, 'completedTask', userId);
   const target2 = doc(db, 'tasks', userId);
+  const timerDocRef = doc(db, 'timer', userId);
 
   const unsubscribeTasks = onSnapshot(target2, (snap) => {
     const data = snap.data();
@@ -112,10 +113,20 @@ useEffect(() => {
     }
   });
 
+  const unsubscribeTimer = onSnapshot(timerDocRef, (snap) => {
+    const data = snap.data();
+    if (data) {
+      setTimer(data);
+    } else {
+      setTimer({});
+    }
+  });
+
   // Cleanup on unmount
   return () => {
     unsubscribeTasks();
     unsubscribeCompleted();
+    unsubscribeTimer();
   };
 }, [userId]);
 
@@ -250,6 +261,12 @@ useEffect(() => {
                                 [`${index}`]:deleteField()
                             }).then(() => {
                                 toast.success('Timer deleted');
+                                setTimer((prev:any) => {
+                                const updated = { ...prev };
+                                delete updated[index]; // remove timer by index key
+                                return updated;
+                                });
+
                             });
                     }} />
                 </div>}
@@ -334,7 +351,7 @@ useEffect(() => {
                      width: '40px',
                     }}
                     />
-                    <p>Click to add task</p>
+                    <p>Click to add timer</p>
                 </div>
                 )}
                 <SizedBox height={10}/>

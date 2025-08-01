@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 
 
 const TimerPage: React.FC = () => {
-  const { setToolBarShown, showOverlay, setCurrentPageIndex, description, setDescription, userId,setTimer,isAsking } = useWatch();
+  const { setToolBarShown, showOverlay, setCurrentPageIndex, description, setDescription, userId,setTimer,isAsking,setIsAsking } = useWatch();
 
   const [timers, setTimers] = useState<Record<string, { time: string; description?: string; startTimestamp?: number }>>({});
   const [currentTimerIndex, setCurrentTimerIndex] = useState(0);
@@ -40,7 +40,11 @@ const TimerPage: React.FC = () => {
         setLoading(false);
       }
     });
-    return () => unsubscribe();
+
+    return () => {
+      unsubscribe()
+
+    };
   }, [userId]);
 
   //Show pop up on request
@@ -49,11 +53,12 @@ const TimerPage: React.FC = () => {
             setTimeout(() => {
             showOverlay(true);
             setToolBarShown(true);
+            setIsAsking(false);
             },500);
         }
     },[])
 
-  const timerKeys = Object.keys(timers);
+  const timerKeys = Object.keys(timers).reverse();
   const currentKey = timerKeys[currentTimerIndex];
   const currentTimerData = currentKey ? timers[currentKey] : null;
 
@@ -66,20 +71,20 @@ const TimerPage: React.FC = () => {
       }
     : { hours: 0, minutes: 0, seconds: 0 };
 
-  // Total seconds for this timer
-  const totalSeconds = (parsedTime.hours * 3600) + (parsedTime.minutes * 60);
+  // // Total seconds for this timer
+  // const totalSeconds = (parsedTime.hours * 3600) + (parsedTime.minutes * 60);
 
-  // Calculate elapsed time from startTimestamp
-  const startTimestamp = currentTimerData?.startTimestamp || 0;
-  const elapsedSeconds = startTimestamp ? Math.floor((Date.now() - startTimestamp) / 1000) : 0;
+  // // Calculate elapsed time from startTimestamp
+  // const startTimestamp = currentTimerData?.startTimestamp || 0;
+  // const elapsedSeconds = startTimestamp ? Math.floor((Date.now() - startTimestamp) / 1000) : 0;
 
-  // Calculate remaining seconds
-  const remainingSeconds = Math.max(totalSeconds - elapsedSeconds, 0);
+  // // Calculate remaining seconds
+  // const remainingSeconds = Math.max(totalSeconds - elapsedSeconds, 0);
 
-  // Convert remaining seconds to h/m/s
-  const remHours = Math.floor(remainingSeconds / 3600);
-  const remMinutes = Math.floor((remainingSeconds % 3600) / 60);
-  const remSeconds = remainingSeconds % 60;
+  // // Convert remaining seconds to h/m/s
+  // const remHours = Math.floor(remainingSeconds / 3600);
+  // const remMinutes = Math.floor((remainingSeconds % 3600) / 60);
+  // const remSeconds = remainingSeconds % 59;
 
   const goNext = () => setCurrentTimerIndex((i) => (i + 1) % timerKeys.length);
   const goPrev = () => setCurrentTimerIndex((i) => (i - 1 + timerKeys.length) % timerKeys.length);
@@ -185,9 +190,9 @@ const TimerPage: React.FC = () => {
     {currentTimerData.startTimestamp ? (
       <CountdownTimer
         key={currentKey}
-        hours={remHours}
-        minutes={remMinutes}
-        seconds={0}
+        hours={parsedTime.hours}
+        minutes={parsedTime.minutes}
+        seconds={parsedTime.seconds}
         strokeWidth={10}
         colors={["#5F29CC", "#5F29CC", "#5F29CC"]}
         size={200}
@@ -264,6 +269,11 @@ const TimerPage: React.FC = () => {
               [`${currentTimerIndex}`]:deleteField()
               }).then(() => {
               toast.success('Timer deleted');
+              setTimer((prev:any) => {
+                const updated = {...prev};
+                delete updated[currentTimerIndex];
+                return updated;
+              })
               });
            }}>
             Delete

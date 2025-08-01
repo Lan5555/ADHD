@@ -11,11 +11,12 @@ import SizedBox from "@/app/hooks/SizedBox"
 import { ThemeColor, ThemeColorSpecific } from "@/app/static/colors"
 import { db } from "@/app/static/firebase"
 import useLocalStorage from "@/app/static/save"
+import { imgIcon } from "@/app/static/styles"
 import { faAngleDown, faClock, faEllipsisH, faPlus, faQuestion, faSearch } from "@fortawesome/free-solid-svg-icons"
 import { faClipboardList } from "@fortawesome/free-solid-svg-icons/faClipboardList"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Button, Fab, Switch } from "@mui/material"
-import { deleteField, doc, getDoc, updateDoc } from "firebase/firestore"
+import { deleteDoc, deleteField, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore"
 import { useEffect, useRef, useState } from "react"
 import { toast } from "react-toastify"
 
@@ -75,12 +76,15 @@ const TaskPage:React.FC = () => {
           }).then(() => {
             toast.success('Deleted successfully');
             setTask(tasks);
-            //Remember
+            setTask((prev:any) => {
+              const updated = {...prev};
+              delete updated[key];
+              return updated;
+            })
           })
 
         }}>
-            <FontAwesomeIcon icon={faEllipsisH} className="text-gray-300"/>
-            <FontAwesomeIcon icon={faEllipsisH} className="text-gray-300 relative bottom-1"/>
+           <img src='/bin.png' style={{...imgIcon}}/>
         </div>}
         />
             )
@@ -216,6 +220,19 @@ useEffect(() => {
 },[textRef.current?.textContent]);
 
 
+useEffect(() => {
+  if(!userId) return;
+  const taskRef = doc(db,'tasks',userId);
+    const unSubscribe = onSnapshot(taskRef,(data) => {
+      const result = data.data();
+      if(result){
+        setTask(result)
+      }
+      return () => unSubscribe();
+    });
+},[userId])
+
+
     return <>
     <div className="flex justify-center items-center gap-3 w-full flex-col p-3">
         {/* Search and Categories */}
@@ -275,7 +292,9 @@ useEffect(() => {
        {/* End */}
        <div className="w-full rounded-2xl shadow p-2 relative">
         <h2 className="text-gray-400 text-sm">Upcoming tasks: {taskLength}</h2>
-        {Object.keys(tasks).length > 0 ? (FetchTasksOnLoad()) : (
+        {Object.keys(tasks).length > 0 ? (
+          FetchTasksOnLoad()
+          ) : (
           <div className="h-20 flex flex-col justify-center items-center w-full gap-3.5 opacity-40" onClick={() => {
             setCurrentPageIndex(1);
             setToolBarShown(true);
@@ -294,7 +313,18 @@ useEffect(() => {
               </div>
         )}
         
-         <SizedBox height={35}/>
+         <SizedBox height={15}/>
+          <Button variant={'text'} size={'small'} onClick={async() => {
+            if(!userId) return;
+            const dataRef = doc(db,'tasks',userId);
+            await deleteDoc(dataRef)
+            .then(() => {
+              toast.success('Deleted data sucessfully');
+              setTask({})
+            });
+          }}>
+            Delete all tasks
+          </Button>
        </div>
        {/* End */}
          <SizedBox height={5}/>

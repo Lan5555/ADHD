@@ -1,6 +1,4 @@
-'use client';
-
-import React from 'react';
+import React, { useMemo } from 'react';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 
 type CountdownTimerProps = {
@@ -9,9 +7,9 @@ type CountdownTimerProps = {
   seconds?: number;
   size?: number;
   strokeWidth?: number;
-  colors?: [`#${string}`, `#${string}`, `#${string}`]; // Strict format
+  colors?: [`#${string}`, `#${string}`, `#${string}`];
   onComplete?: () => void;
-  startTimestamp?: number; // UNIX timestamp in milliseconds when timer started
+  startTimestamp?: number; // in ms
 };
 
 export const CountdownTimer: React.FC<CountdownTimerProps> = ({
@@ -24,13 +22,16 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
   onComplete,
   startTimestamp,
 }) => {
-  const totalDuration = hours * 3600 + minutes * 60 + seconds;
+  const totalDuration = useMemo(() => {
+    return hours * 3600 + minutes * 60 + seconds;
+  }, [hours, minutes, seconds]);
 
-  // Calculate remaining time based on startTimestamp and current time
-  const now = Math.floor(Date.now() / 1000);
-  const initialRemainingTime = startTimestamp
-    ? Math.max(totalDuration - (now - Math.floor(startTimestamp / 1000)), 0)
-    : totalDuration;
+  const initialRemainingTime = useMemo(() => {
+    if (!startTimestamp) return totalDuration;
+    const now = Math.floor(Date.now() / 1000);
+    const start = Math.floor(startTimestamp / 1000);
+    return Math.max(totalDuration - (now - start), 0);
+  }, [startTimestamp, totalDuration]);
 
   return (
     <CountdownCircleTimer
