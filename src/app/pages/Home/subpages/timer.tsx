@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect, useState } from "react";
 import ListTile from "@/app/components/ListTile";
 import PageCount from "@/app/components/page_count";
@@ -14,15 +15,15 @@ import { CountdownTimer } from "@/app/components/circle_timer";
 import { UseFirebase } from "@/app/hooks/firebase_hooks";
 import { toast } from "react-toastify";
 
+
 const TimerPage: React.FC = () => {
-  const { setToolBarShown, showOverlay, setCurrentPageIndex, description, setDescription, userId,setTimer } = useWatch();
+  const { setToolBarShown, showOverlay, setCurrentPageIndex, description, setDescription, userId,setTimer,isAsking } = useWatch();
 
   const [timers, setTimers] = useState<Record<string, { time: string; description?: string; startTimestamp?: number }>>({});
   const [currentTimerIndex, setCurrentTimerIndex] = useState(0);
   const [isLoading, setLoading] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
  
-
   // Load timers and listen for realtime updates
   useEffect(() => {
     if (!userId) return;
@@ -39,9 +40,18 @@ const TimerPage: React.FC = () => {
         setLoading(false);
       }
     });
-
     return () => unsubscribe();
   }, [userId]);
+
+  //Show pop up on request
+  useEffect(() => {
+        if(isAsking){
+            setTimeout(() => {
+            showOverlay(true);
+            setToolBarShown(true);
+            },500);
+        }
+    },[])
 
   const timerKeys = Object.keys(timers);
   const currentKey = timerKeys[currentTimerIndex];

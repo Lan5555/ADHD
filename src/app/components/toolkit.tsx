@@ -1,5 +1,5 @@
 import { NextJsHotReloaderInterface } from "next/dist/server/dev/hot-reloader-types"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useWatch } from "../hooks/page_index";
 import SizedBox from "../hooks/SizedBox";
 
@@ -10,6 +10,7 @@ interface ToolKit{
     content: React.ReactNode,
     onPressed?: (index: number) => void;
     onConfirm?: () => void;
+    
 }
 
 

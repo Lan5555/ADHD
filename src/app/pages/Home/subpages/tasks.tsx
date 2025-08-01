@@ -23,7 +23,7 @@ const TaskPage:React.FC = () => {
     const [comingTasks,setComingTasks] = useState<number>(3);
     const [completedTasks,setCompletedTasks] = useState<number>(3);
     const colors:string[] = Object.values(ThemeColorSpecific);
-    const {tasks, completedTask, setToolBarShown, showOverlay, setTask,userId, setCurrentPageIndex,taskLength} = useWatch();
+    const {tasks, completedTask, setToolBarShown, showOverlay, setTask,userId, setCurrentPageIndex,taskLength, setIsAsking} = useWatch();
     const [nameValue, setNameValue] = useState('');
     const [cat, setCategory] = useState('chores');
     const [completed, setCompleted] = useState(false);
@@ -39,6 +39,7 @@ const TaskPage:React.FC = () => {
     const dropDownRef = useRef<HTMLDivElement>(null);
     const textRef = useRef<HTMLParagraphElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const [visible, seVisible] = useState<boolean>(false);
     
      function byPass(){
       setTimeout(() => {
@@ -178,6 +179,7 @@ const TaskPage:React.FC = () => {
           }});
 
         if(data.success){
+          setIsAsking(true);
           toast.success('Updated successfully now add a timer');
           setCurrentPageIndex(2);
         }else if(data.error){
@@ -325,8 +327,8 @@ useEffect(() => {
            }
            />
         </Fab>
-        <div className="flex justify-center items-center">
-        <ToolBar content={<div className="flex justify-center items-center flex-col gap-5 w-60">
+        <ToolBar 
+           content={<div className="flex justify-center items-center flex-col gap-5 w-60">
           <h4 className="text-sm">Task description</h4>
           <input type="text" placeholder="Enter task description" className="w-full p-2 rounded-xl bg-gray-100 outline-none border-none text-sm" style={{
             paddingLeft: '10px',
@@ -383,7 +385,6 @@ useEffect(() => {
             </div>
             
             </ShowBottomSheet>
-    </div>
     </>
 }
 export default TaskPage;

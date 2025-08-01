@@ -43,7 +43,9 @@ type WatchContextType = {
     setCurrentUserId:(val:string | null) => void;
     currentTime:string;
     setTime:(val:string) => void;
-    isAuthReady:boolean
+    isAuthReady:boolean;
+    isAsking:boolean;
+    setIsAsking:(val:boolean) => void;
 };
 
 const WatchContext = createContext<WatchContextType | undefined>(undefined);
@@ -64,6 +66,7 @@ export const WatchProvider = ({ children }: { children: ReactNode }) => {
     const [currentTime, setTime] = useState<string>('00:00');
     const [timers, setTimers] = useState<Record<string, { time: string; description?: string }>>({});
     const [isAuthReady, setIsAuthReady] = useState(false);
+    const [isAsking, setIsAsking] = useState<boolean>(false);
 
     useEffect(() => {
    setPersistence(auth, browserLocalPersistence)
@@ -134,7 +137,9 @@ export const WatchProvider = ({ children }: { children: ReactNode }) => {
                 setCurrentUserId,
                 currentTime,
                 setTime,
-                isAuthReady
+                isAuthReady,
+                isAsking,
+                setIsAsking
             }}
         >
             {children}
