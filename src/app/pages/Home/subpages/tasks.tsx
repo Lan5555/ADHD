@@ -393,7 +393,7 @@ useEffect(() => {
               setCurrentSheetState(false);
               showOverlay(false);
               }}>
-              <div className="flex justify-center items-center p-2 gap-3">
+              <div className="flex justify-center items-center p-2 gap-3 mt-20">
                 {['Chores','Personal','Work','Other'].map((element,index) => (
 
                   <div
