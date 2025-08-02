@@ -81,6 +81,7 @@ const handleSignInWithGoogle = async () => {
                 setOpen(true);
                 setSnackText('Welcome back!');
                 setSnackSeverity('success');
+                
       }
 
       // TODO: Redirect user to dashboard or home page here
@@ -88,14 +89,14 @@ const handleSignInWithGoogle = async () => {
 
     } else {
                 setOpen(true);
-                setSnackText('Google signin failed');
+                setSnackText('Google signin failed' + data.error);
                 setSnackSeverity('warning');
     }
   } catch (err) {
     console.error(err);
     setOpen(true);
-    setSnackText('Welcome!');
-    setSnackSeverity('Oops something wrong');
+    setSnackText('Oops! somethung went wrong');
+    setSnackSeverity('warning');
   } finally {
     setLoading(false);
   }

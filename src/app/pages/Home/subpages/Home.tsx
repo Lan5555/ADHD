@@ -222,7 +222,7 @@ useEffect(() => {
     //Fetch Completed Tasks on Load
     const FetchTimerOnLoad = () => {
         const Time = Object.values(timer);
-        return Time.slice(0,4).map((element, index) => {
+        return Time.slice(0,2).map((element, index) => {
             return (
             <ListTile
                  key={index}
