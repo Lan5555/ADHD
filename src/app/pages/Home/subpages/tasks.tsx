@@ -418,7 +418,7 @@ useEffect(() => {
               
             <div className="flex justify-center items-center gap-2 flex-col">
               <h2 className="font-bold mt-10">Details below</h2>
-              <p className="text-lg text-blue-600 text-sm">{foundTask || 'No tasks available'}</p>
+              <p className="text-lg text-blue-600">{foundTask || 'No tasks available'}</p>
               <h2 className="text-sm">Queried time</h2>
               <p>{new Date().toISOString()}</p>
               <p className="text-sm">Click on the timer icon to monitor</p>
