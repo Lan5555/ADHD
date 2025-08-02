@@ -7,7 +7,7 @@ import { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 
 const Register:React.FC = () => {
-    const {toggleSignUp,setActivePageIndex, isToolBarShown,setToolBarShown} = useWatch();
+    const {toggleSignUp,setActivePageIndex, isToolBarShown,setToolBarShown,setOpen,setSnackSeverity,setSnackText} = useWatch();
     const {SignUp,SignInWithGoogle,addData} = UseFirebase();
     const [email, setUserEmail] = useState<string>('');
     const [password, setUserPassword] = useState<string>('');
@@ -22,7 +22,9 @@ const Register:React.FC = () => {
   e.preventDefault();
 
   if (password !== confirmPassword) {
-    toast.warning('Passwords dont match');
+    setOpen(true);
+    setSnackText('Passwords dont match');
+    setSnackSeverity('warning');
     return;
   }
 
@@ -31,7 +33,9 @@ const Register:React.FC = () => {
     const data = await SignUp({ email, password });
 
     if (data.success) {
-      toast.success('Registered Successfully');
+      setOpen(true);
+      setSnackText('Registered successfully');
+      setSnackSeverity('success');
 
       const user = data.data; 
 
@@ -51,7 +55,9 @@ const Register:React.FC = () => {
     }
   } catch (err) {
     console.error(err);
-    toast.warning('Something went wrong');
+    setOpen(true);
+    setSnackText('Oops something went wrong!');
+    setSnackSeverity('warning');
   } finally {
     setLoading(false);
   }
@@ -64,7 +70,9 @@ const Register:React.FC = () => {
     const data = await SignInWithGoogle();
 
     if (data.success && data.data) {
-      toast.success('User Registered');
+      setOpen(true);
+      setSnackText('Registered successfully');
+      setSnackSeverity('success');
 
       const user = data.data;
 
@@ -79,11 +87,15 @@ const Register:React.FC = () => {
         toast.warning(saveResult.error);
       }
     } else {
-      toast.error(data.error || 'Google sign-in failed');
+      setOpen(true);
+      setSnackText('Sign in error');
+      setSnackSeverity('warning');
     }
   } catch (err) {
     console.error(err);
-    toast.error('Something went wrong during Google sign-in');
+    setOpen(true);
+    setSnackText('Oops something went wrong');
+    setSnackSeverity('warning');
   } finally {
     setLoading(false);
   }

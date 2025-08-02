@@ -46,6 +46,12 @@ type WatchContextType = {
     isAuthReady:boolean;
     isAsking:boolean;
     setIsAsking:(val:boolean) => void;
+    open:boolean;
+    setOpen:(val:boolean) => void;
+    snackText:string;
+    setSnackText:(val:string) => void;
+    snackSeverity:any;
+    setSnackSeverity:any;
 };
 
 const WatchContext = createContext<WatchContextType | undefined>(undefined);
@@ -67,6 +73,9 @@ export const WatchProvider = ({ children }: { children: ReactNode }) => {
     const [timers, setTimers] = useState<Record<string, { time: string; description?: string }>>({});
     const [isAuthReady, setIsAuthReady] = useState(false);
     const [isAsking, setIsAsking] = useState<boolean>(false);
+    const [open, setOpen] = useState(false);
+    const [snackText, setSnackText] = useState<string>('');
+    const [snackSeverity, setSnackSeverity] = useState<'success' | 'error' | 'warning' | 'info'>('info');
 
     useEffect(() => {
    setPersistence(auth, browserLocalPersistence)
@@ -139,7 +148,13 @@ export const WatchProvider = ({ children }: { children: ReactNode }) => {
                 setTime,
                 isAuthReady,
                 isAsking,
-                setIsAsking
+                setIsAsking,
+                open,
+                setOpen,
+                snackText,
+                setSnackText,
+                snackSeverity,
+                setSnackSeverity
             }}
         >
             {children}

@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 
 
 const TimerPage: React.FC = () => {
-  const { setToolBarShown, showOverlay, setCurrentPageIndex, description, setDescription, userId,setTimer,isAsking,setIsAsking } = useWatch();
+  const { setToolBarShown, showOverlay, setCurrentPageIndex, description, setDescription, userId,setTimer,isAsking,setIsAsking, setSnackSeverity,setSnackText,setOpen } = useWatch();
 
   const [timers, setTimers] = useState<Record<string, { time: string; description?: string; startTimestamp?: number }>>({});
   const [currentTimerIndex, setCurrentTimerIndex] = useState(0);
@@ -197,7 +197,11 @@ const TimerPage: React.FC = () => {
         colors={["#5F29CC", "#5F29CC", "#5F29CC"]}
         size={200}
         startTimestamp={currentTimerData?.startTimestamp}
-        onComplete={() => alert(`Timer ${currentKey} completed`)}
+        onComplete={() => {
+          setOpen(true);
+      setSnackText(`Timer ${currentKey} completed`);
+      setSnackSeverity('success');
+        }}
       />
     ) : (
       <div className="flex flex-col items-center gap-3">
@@ -238,7 +242,9 @@ const TimerPage: React.FC = () => {
             await updateDoc(dataRef,{
             [`${currentTimerIndex}.time`]:'00:00'
             }).then(() => {
-            toast.success('Timer resetted');
+            setOpen(true);
+      setSnackText('Success');
+      setSnackSeverity('success');
             });
 
             setTimer((prev: any[]) => ({
@@ -268,7 +274,9 @@ const TimerPage: React.FC = () => {
               await updateDoc(dataRef,{
               [`${currentTimerIndex}`]:deleteField()
               }).then(() => {
-              toast.success('Timer deleted');
+              setOpen(true);
+              setSnackText('Timer deleted');
+              setSnackSeverity('success');
               setTimer((prev:any) => {
                 const updated = {...prev};
                 delete updated[currentTimerIndex];

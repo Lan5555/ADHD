@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 
 
 const LoginPage:React.FC = () => {
-    const {toggleSignUp,setActivePageIndex,setCurrentUserId} = useWatch();
+    const {toggleSignUp,setActivePageIndex,setCurrentUserId,setOpen,setSnackText,setSnackSeverity} = useWatch();
     const {LogIn,SignInWithGoogle,addData} = UseFirebase();
     const [email,setEmail] = useState<string>('');
     const [password,setPassword] = useState<string>('');
@@ -29,14 +29,19 @@ const LoginPage:React.FC = () => {
         try{
             const login = await LogIn({email:email,password:password});
             if(login.success){
-                toast.success('Welcome!');
                 setActivePageIndex(1);
-
+                setOpen(true);
+                setSnackText('Welcome!');
+                setSnackSeverity('success');
             }else{
-                toast.success('Failed to login');
+                setOpen(true);
+                setSnackText('Failed to log in');
+                setSnackSeverity('warning');
             }
         }catch(e:any){
-            toast.warning('Oops something went wrong' + e.message);
+                setOpen(true);
+                setSnackText('Oops something went wrong');
+                setSnackSeverity('warning');
         }finally{
             setLoading(false);
         }
@@ -63,24 +68,34 @@ const handleSignInWithGoogle = async () => {
         });
 
         if (saveResult.success) {
-          toast.success('New user registered and logged in');
+                setOpen(true);
+                setSnackText('Success');
+                setSnackSeverity('success');
         } else {
-          toast.warning('Signed in, but failed to save user data: ' + saveResult.error);
+                setOpen(true);
+                setSnackText('Failed to save user details');
+                setSnackSeverity('warning');
         }
       } else {
         // Returning user
-        toast.success('Welcome back!');
+                setOpen(true);
+                setSnackText('Welcome back!');
+                setSnackSeverity('success');
       }
 
       // TODO: Redirect user to dashboard or home page here
       setActivePageIndex(1);
 
     } else {
-      toast.error(data.error || 'Google sign-in failed');
+                setOpen(true);
+                setSnackText('Google signin failed');
+                setSnackSeverity('warning');
     }
   } catch (err) {
     console.error(err);
-    toast.error('Something went wrong during Google sign-in');
+    setOpen(true);
+    setSnackText('Welcome!');
+    setSnackSeverity('Oops something wrong');
   } finally {
     setLoading(false);
   }

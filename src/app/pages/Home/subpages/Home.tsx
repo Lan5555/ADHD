@@ -21,7 +21,7 @@ const Home:React.FC = () => {
     const {currentPageIndex,setCurrentPageIndex,
           taskCount, taskLength,
           setCount, setTaskLength,
-          FlexStart,tasks,setDescription, timer,setCurrentUserId,userId,setTask, setCompletedTask,setTimer} = useWatch();
+          FlexStart,tasks,setDescription, timer,setCurrentUserId,userId,setTask, setCompletedTask,setTimer, setOpen, setSnackSeverity, setSnackText} = useWatch();
     const colors:string[] = Object.values(ThemeColorSpecific);
     const {fetchDataByQuery,fetchData, addOrUpdateUserData} = UseFirebase();
     const [userName, setUserName] = useState<string>('');
@@ -40,10 +40,14 @@ const Home:React.FC = () => {
             setTaskLength(Length);
         }
       } else {
-        toast.info('No tasks found for this user.');
+        setOpen(true);
+      setSnackText('No task found');
+      setSnackSeverity('success');
       }
     } catch (e: any) {
-      toast.warning('Something went wrong: ' + e.message);
+      setOpen(true);
+      setSnackText('Oops something went wrong');
+      setSnackSeverity('warning');
     }
   };
 
@@ -55,7 +59,9 @@ const Home:React.FC = () => {
             setUserName((userData.data)['name']);
         }
     }catch(e:any){
-        toast.warning('Error fetching user details');
+        setOpen(true);
+      setSnackText('Error fetching user details');
+      setSnackSeverity('warning');
     }
   }
   const fetchCompletedTasks = async () => {
@@ -146,7 +152,7 @@ useEffect(() => {
     //Fetch Active Tasks on Load
     const FetchTaskActiveTasksOnLoad =  () => {
         const details = Object.values(tasks);
-        return details.slice(0,5).map((element, index) => {
+        return details.slice(0,3).map((element, index) => {
             // Use a stable color based on index or element property
             const stableColor = colors[index % colors.length];
             // Use a unique key if available, fallback to index
@@ -178,7 +184,9 @@ useEffect(() => {
                             isCompleted: true
                             }});
                             if(data.success){
-                                toast.success('Task completed successfully');
+                                setOpen(true);
+                                setSnackText('Task completed successfully');
+                                setSnackSeverity('success');
                             }
 
                             const updateValue = doc(db,'tasks',userId!);
@@ -214,7 +222,7 @@ useEffect(() => {
     //Fetch Completed Tasks on Load
     const FetchTimerOnLoad = () => {
         const Time = Object.values(timer);
-        return Time.slice(0,5).map((element, index) => {
+        return Time.slice(0,4).map((element, index) => {
             return (
             <ListTile
                  key={index}
@@ -242,7 +250,9 @@ useEffect(() => {
                             await updateDoc(dataRef,{
                                 [`${index}.time`]:'00:00'
                             }).then(() => {
-                                toast.success('Timer reseted');
+                                setOpen(true);
+                                setSnackText('Success');
+                                setSnackSeverity('success');
                             });
 
                             setTimer((prev: any[]) => ({
@@ -260,7 +270,9 @@ useEffect(() => {
                             await updateDoc(dataRef,{
                                 [`${index}`]:deleteField()
                             }).then(() => {
-                                toast.success('Timer deleted');
+                                setOpen(true);
+                                setSnackText('Deleted successfully');
+                                setSnackSeverity('success');
                                 setTimer((prev:any) => {
                                 const updated = { ...prev };
                                 delete updated[index]; // remove timer by index key

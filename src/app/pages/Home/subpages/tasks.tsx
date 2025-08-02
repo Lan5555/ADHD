@@ -24,7 +24,7 @@ const TaskPage:React.FC = () => {
     const [comingTasks,setComingTasks] = useState<number>(3);
     const [completedTasks,setCompletedTasks] = useState<number>(3);
     const colors:string[] = Object.values(ThemeColorSpecific);
-    const {tasks, completedTask, setToolBarShown, showOverlay, setTask,userId, setCurrentPageIndex,taskLength, setIsAsking} = useWatch();
+    const {tasks, completedTask, setToolBarShown, showOverlay, setTask,userId, setCurrentPageIndex,taskLength, setIsAsking, setOpen,setSnackSeverity,setSnackText} = useWatch();
     const [nameValue, setNameValue] = useState('');
     const [cat, setCategory] = useState('chores');
     const [completed, setCompleted] = useState(false);
@@ -74,7 +74,9 @@ const TaskPage:React.FC = () => {
           await updateDoc(dataRef,{
             [`${key}`]:deleteField()
           }).then(() => {
-            toast.success('Deleted successfully');
+            setOpen(true);
+      setSnackText('Deleted successfully');
+      setSnackSeverity('success');
             setTask(tasks);
             setTask((prev:any) => {
               const updated = {...prev};
@@ -184,16 +186,22 @@ const TaskPage:React.FC = () => {
 
         if(data.success){
           setIsAsking(true);
-          toast.success('Updated successfully now add a timer');
+          setOpen(true);
+          setSnackText('Updated successfully now add a timer');
+          setSnackSeverity('success');
           setCurrentPageIndex(2);
         }else if(data.error){
           toast.warning(data.error);
         }
       }catch(e:any){
-          toast.warning('Something went wrong');
+          setOpen(true);
+      setSnackText('Something went wrong');
+      setSnackSeverity('warning');
       }
     }else{
-      alert('type something');
+      setOpen(true);
+      setSnackText('Type something');
+      setSnackSeverity('info');
     }
     //End
       break;
@@ -319,7 +327,9 @@ useEffect(() => {
             const dataRef = doc(db,'tasks',userId);
             await deleteDoc(dataRef)
             .then(() => {
-              toast.success('Deleted data sucessfully');
+              setOpen(true);
+              setSnackText('Deleted data successfully');
+              setSnackSeverity('success');
               setTask({})
             });
           }}>

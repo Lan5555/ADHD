@@ -18,7 +18,7 @@ const ShowBottomSheet = ({children, heightValue, style, className, onClose}:shee
     },[state]);
         return (
         <div 
-            className={`w-full h-[40vh] shadow bg-amber-100 fixed bottom-0 slide-in-bottom ${className}`} style={{
+            className={`w-full h-[40vh] shadow bg-amber-100 fixed bottom-0 slide-in-bottom ${className} left-0`} style={{
             height:heightValue,
             borderTopLeftRadius:'30px',
             borderTopRightRadius:'30px',
