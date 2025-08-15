@@ -20,13 +20,16 @@ import { UseFirebase } from "@/app/hooks/firebase_hooks";
 import { toast } from "react-toastify";
 import { imgIcon } from "@/app/static/styles";
 import { ThemeColor } from "@/app/static/colors";
+import OverlayContent from "@/app/components/time_ip";
 
 const MobileLayout:React.FC = () => {
 
-    const {currentPageIndex,setCurrentPageIndex,
+    const {
+          setIsTimeUp,
+          currentPageIndex,setCurrentPageIndex,
           taskCount, taskLength,
           setCount, setDarkMode,
-          FlexStart,tasks, userId,timeOfDay, setTimeOfDayIndex,timeOfDayIndex, darkMode} = useWatch();
+          isTimeUp,tasks, userId,timeOfDay, setTimeOfDayIndex,timeOfDayIndex, darkMode} = useWatch();
     const {fetchData} = UseFirebase();
     const [keyValue, setKeyValue] = useState<Record<any,any>>({});
     const divRef = useRef<HTMLDivElement>(null);
@@ -73,7 +76,24 @@ const MobileLayout:React.FC = () => {
     {/* Page initial */}
         <div className="w-full" style={{
             backgroundColor: darkMode ? ThemeColor.darkMode : 'white'
-        }}>
+        }}> 
+            {isTimeUp && (<OverlayContent>
+                <div className="w-96 p-2 rounded-3xl h-[50vh] flex justify-center items-center flex-col gap-5" style={{
+                    backgroundImage: 'url(/timeUp.jpg)',
+                    backgroundPosition:'center',
+                    backgroundRepeat:'no-repeat',
+                    backgroundSize:'cover',
+                }}>
+                    <div className="w-70 h-60 rounded-2xl flex justify-center items-center" style={{
+                        backdropFilter:'blur(4px)'
+                    }}>
+                        <p className="text-white font-bold text-[30pt] text-center font-serif animate-bounce">Time Up</p>
+                    </div>
+                    <Button variant={'contained'} onClick={() => {
+                        setIsTimeUp(false);
+                    }}>Exit</Button>
+                </div>
+            </OverlayContent>)}
             <AppBar
              title={'Clarity tasks'}
              trailing={[

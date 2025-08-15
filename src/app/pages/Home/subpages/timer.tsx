@@ -17,13 +17,14 @@ import { toast } from "react-toastify";
 
 
 const TimerPage: React.FC = () => {
-  const {darkMode, setToolBarShown, showOverlay, setCurrentPageIndex, description, setDescription, userId,setTimer,isAsking,setIsAsking, setSnackSeverity,setSnackText,setOpen } = useWatch();
+  const {setIsTimeUp,darkMode, setToolBarShown, showOverlay, setCurrentPageIndex, description, setDescription, userId,setTimer,isAsking,setIsAsking, setSnackSeverity,setSnackText,setOpen } = useWatch();
 
   const [timers, setTimers] = useState<Record<string, { time: string; description?: string; startTimestamp?: number }>>({});
   const [currentTimerIndex, setCurrentTimerIndex] = useState(0);
   const [isLoading, setLoading] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
- 
+  const [confirmDelete, setConfirmation] = useState<boolean>(false);
+  const [newKey, setNewKey] = useState<number>(0);
   // Load timers and listen for realtime updates
   useEffect(() => {
     if (!userId) return;
@@ -71,20 +72,6 @@ const TimerPage: React.FC = () => {
       }
     : { hours: 0, minutes: 0, seconds: 0 };
 
-  // // Total seconds for this timer
-  // const totalSeconds = (parsedTime.hours * 3600) + (parsedTime.minutes * 60);
-
-  // // Calculate elapsed time from startTimestamp
-  // const startTimestamp = currentTimerData?.startTimestamp || 0;
-  // const elapsedSeconds = startTimestamp ? Math.floor((Date.now() - startTimestamp) / 1000) : 0;
-
-  // // Calculate remaining seconds
-  // const remainingSeconds = Math.max(totalSeconds - elapsedSeconds, 0);
-
-  // // Convert remaining seconds to h/m/s
-  // const remHours = Math.floor(remainingSeconds / 3600);
-  // const remMinutes = Math.floor((remainingSeconds % 3600) / 60);
-  // const remSeconds = remainingSeconds % 59;
 
   const goNext = () => setCurrentTimerIndex((i) => (i + 1) % timerKeys.length);
   const goPrev = () => setCurrentTimerIndex((i) => (i - 1 + timerKeys.length) % timerKeys.length);
@@ -187,7 +174,7 @@ const TimerPage: React.FC = () => {
 
         {currentTimerData && (
   <>
-    {currentTimerData.startTimestamp ? (
+    {(currentTimerData.startTimestamp && parsedTime.minutes > 0) ? (
       <CountdownTimer
         key={currentKey}
         hours={parsedTime.hours}
@@ -198,9 +185,10 @@ const TimerPage: React.FC = () => {
         size={200}
         startTimestamp={currentTimerData?.startTimestamp}
         onComplete={() => {
-          setOpen(true);
-      setSnackText(`Timer ${currentKey} completed`);
-      setSnackSeverity('success');
+          // setOpen(true);
+          // setSnackText(`Timer ${currentKey} completed`);
+          // setSnackSeverity('success');
+          setIsTimeUp(true);
         }}
       />
     ) : (
@@ -270,21 +258,9 @@ const TimerPage: React.FC = () => {
               padding: "10px 20px",
               width: "100px",
             }}
-           onClick={async()=> {
-              if(!userId) return;
-              const dataRef = doc(db,'timer',userId);
-              await updateDoc(dataRef,{
-              [`${currentTimerIndex}`]:deleteField()
-              }).then(() => {
-              setOpen(true);
-              setSnackText('Timer deleted');
-              setSnackSeverity('success');
-              setTimer((prev:any) => {
-                const updated = {...prev};
-                delete updated[currentTimerIndex];
-                return updated;
-              })
-              });
+           onClick={()=> {
+              setConfirmation(true);
+             
            }}>
             Delete
           </Button>
@@ -316,6 +292,43 @@ const TimerPage: React.FC = () => {
             }}
           />
         </Fab>
+          {confirmDelete && (<div className="h-auto w-96 flex justify-center items-center fixed pop-up">
+            <form style={{ whiteSpace: 'pre-line' }}
+            onSubmit={async(e) => {
+              e.preventDefault();
+              if(!userId) return;
+              const dataRef = doc(db,'timer',userId);
+              await updateDoc(dataRef,{
+              [`${newKey}`]:deleteField()
+              }).then(() => {
+              setOpen(true);
+              setSnackText('Timer deleted');
+              setSnackSeverity('success');
+              setTimer((prev:any) => {
+                const updated = {...prev};
+                delete updated[newKey];
+                return updated;
+              })
+              });
+              setConfirmation(false);
+            }}
+             className="flex justify-center items-center w-full h-auto p-4 bg-white rounded-2xl flex-col max-h-96 overflow-auto">
+            {Object.entries(timers).map(([key, value]) => (
+            <p key={key}>
+              {key}: {value.description ?? "No description"}
+          </p>
+          ))}
+            <SizedBox height={10}/>
+            <input type="number" placeholder="Enter the key to delete" className="rounded shadow w-52 p-1"
+            onChange={(val) => setNewKey(parseInt(val.target.value))}
+            required></input>
+            <SizedBox height={10}/>
+            <Button 
+             type={'submit'}
+             variant={'contained'}>Confirm</Button>
+            
+          </form>
+          </div>)}
         <ToolBar
           type={"question"}
           content={

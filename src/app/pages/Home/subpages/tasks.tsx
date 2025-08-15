@@ -41,6 +41,7 @@ const TaskPage:React.FC = () => {
     const textRef = useRef<HTMLParagraphElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const [visible, seVisible] = useState<boolean>(false);
+    const {darkMode} = useWatch();
     
      function byPass(){
       setTimeout(() => {
@@ -316,8 +317,11 @@ useEffect(() => {
               height: '40px',
               width: '40px',
               }}
+              color={darkMode ? 'white':'black'}
               />
-              <p>Click to add task</p>
+              <p style={{
+                color: darkMode ? 'white' : 'black'
+              }}>Click to add task</p>
               </div>
         )}
         

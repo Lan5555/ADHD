@@ -292,7 +292,7 @@ useEffect(() => {
 
         <div className="flex justify-center items-center flex-col w-full h-[90vh] gap-3">
             <div className="rounded-2xl shadow-2xl w-[100%] h-32 relative" style={{
-                background: darkMode ? ThemeColor.darkMode : `linear-gradient(to right, ${ThemeColor.primary}, white)`,
+                background: darkMode ? ThemeColor.shadowXg : `linear-gradient(to right, ${ThemeColor.primary}, white)`,
                 boxSizing:'border-box',
                 padding:'10px',
                 boxShadow: darkMode ? ThemeColor.darkShadow!.heavy : ''
@@ -309,7 +309,7 @@ useEffect(() => {
             <div className="w-full rounded-3xl h-auto flex justify-center shadow items-center flex-col relative bg-white" style={{
                 boxSizing:'border-box',
                 padding:'20px',
-                backgroundColor: darkMode ? ThemeColor.darkMode : '',
+                backgroundColor: darkMode ? ThemeColor.shadowXg : '',
                 boxShadow: darkMode ? ThemeColor.darkShadow!.heavy : ''
             }}>
                     <div
@@ -333,21 +333,24 @@ useEffect(() => {
                      height: '40px',
                      width: '40px',
                     }}
+                    color={darkMode ? 'white':'black'}
                     />
-                    <p>Click to add task</p>
+                    <p style={{
+                      color: darkMode ? 'white' : ''
+                    }}>Click to add task</p>
                 </div>
                 )}
 
                 <SizedBox height={10}/>
 
-                <Button variant={darkMode ? 'contained':'text'} className="relative top-3" color={darkMode ? 'primary':'inherit'} style={{color:darkMode ? 'white':ThemeColor.primary}} size={'small'} onClick={() => setCurrentPageIndex(1)}>View all Tasks</Button>
+                <Button variant={darkMode ? 'text':'text'} className="relative top-3" color={darkMode ? 'secondary':'inherit'} style={{color:darkMode ? 'white':ThemeColor.primary}} size={'small'} onClick={() => setCurrentPageIndex(1)}>View all Tasks</Button>
             </div>
             {/* End */}
             <SizedBox height={20}/>
                 {/* Third Container */}
 
              <div className="w-full rounded-3xl h-auto shadow relative flex justify-center items-center flex-col" style={{
-              backgroundColor: darkMode ? ThemeColor.darkMode : '',
+              backgroundColor: darkMode ? ThemeColor.shadowXg : '',
               boxShadow: darkMode ? ThemeColor.darkShadow!.heavy : ''
              }}>
                 <div
@@ -370,14 +373,17 @@ useEffect(() => {
                      height: '40px',
                      width: '40px',
                     }}
+                    color={darkMode ? 'white':''}
                     />
-                    <p>Click to add timer</p>
+                    <p style={{
+                      color: darkMode ? 'white' : 'black'
+                    }}>Click to add timer</p>
                 </div>
                 )}
                 <SizedBox height={10}/>
                 {/* Button */}
                 <Button variant={
-                  darkMode ? 'contained':'text'
+                  darkMode ? 'text':'text'
                   } className="absolute -bottom-2" color={darkMode ? 'primary':'inherit'} style={{color:darkMode ? 'white':ThemeColor.primary}} onClick={() => setCurrentPageIndex(2)}>View all Timers</Button>
                 <SizedBox height={20}/>
 

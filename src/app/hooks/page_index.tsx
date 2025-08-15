@@ -60,6 +60,8 @@ type WatchContextType = {
     setTimeOfDayIndex:(index: number) => void;
     darkMode:boolean;
     setDarkMode:(val:any) => void;
+    isTimeUp:boolean;
+    setIsTimeUp: (val:boolean) => void;
 };
 
 const WatchContext = createContext<WatchContextType | undefined>(undefined);
@@ -87,6 +89,7 @@ export const WatchProvider = ({ children }: { children: ReactNode }) => {
     const [timeOfDay,setTimeOfDay] = useState<IconDefinition[]>([faSun,faMoon]);
     const [timeOfDayIndex, setTimeOfDayIndex] = useState<number>(0);
     const [darkMode, setDarkMode] = useState<boolean>(false);
+    const [isTimeUp, setIsTimeUp] = useState<boolean>(false);
 
     useEffect(() => {
    setPersistence(auth, browserLocalPersistence)
@@ -197,7 +200,9 @@ export const WatchProvider = ({ children }: { children: ReactNode }) => {
                 timeOfDayIndex,
                 setTimeOfDayIndex,
                 darkMode,
-                setDarkMode
+                setDarkMode,
+                isTimeUp,
+                setIsTimeUp
             }}
         >
             {children}
