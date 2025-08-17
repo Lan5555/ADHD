@@ -1,10 +1,12 @@
 'use client'
+import Fact from "@/app/components/fact"
 import ListTile from "@/app/components/ListTile"
 import Progress from "@/app/components/loader_div"
 import Wrap from "@/app/components/wrap"
 import { UseFirebase } from "@/app/hooks/firebase_hooks"
 import { useWatch } from "@/app/hooks/page_index"
 import SizedBox from "@/app/hooks/SizedBox"
+import Destroy from "@/app/hooks/tools"
 import { ThemeColor, ThemeColorSpecific } from "@/app/static/colors"
 import { auth, db } from "@/app/static/firebase"
 import { imgIcon } from "@/app/static/styles"
@@ -18,7 +20,7 @@ import { toast } from "react-toastify";
 
 const Home:React.FC = () => {
     
-    const {setDarkMode,setCurrentPageIndex,
+    const {facts,setFacts,setCurrentPageIndex,
           taskCount, taskLength,
           setCount, setTaskLength,
           FlexStart,tasks,setDescription, timer,setCurrentUserId,userId,setTask, setCompletedTask,setTimer, setOpen, setSnackSeverity, setSnackText,darkMode} = useWatch();
@@ -26,6 +28,7 @@ const Home:React.FC = () => {
     const {fetchDataByQuery,fetchData, addOrUpdateUserData} = UseFirebase();
     const [userName, setUserName] = useState<string>('');
     const [marked, setMarked] = useState<boolean>(false);
+    const [displayItem, setDisplayItem] = useState<boolean>(false);
 
   useEffect(() => {
   const fetchData2 = async () => {
@@ -86,6 +89,8 @@ const Home:React.FC = () => {
         }
     }catch(e:any){}
   }
+
+
   
   fetchUserName();
   fetchData2();
@@ -146,6 +151,12 @@ useEffect(() => {
         }
         return () => taskComplete();
     });
+    const delayBeforeDisplaying = () => {
+      setTimeout(() => {
+        setDisplayItem(true);
+      },2000);
+    }
+    delayBeforeDisplaying();
  },[]);
 
 
@@ -291,11 +302,13 @@ useEffect(() => {
         {/* Container */}
 
         <div className="flex justify-center items-center flex-col w-full h-[90vh] gap-3">
-            <div className="rounded-2xl shadow-2xl w-[100%] h-32 relative" style={{
-                background: darkMode ? ThemeColor.shadowXg : `linear-gradient(to right, ${ThemeColor.primary}, white)`,
+            <div className="shadow-2xl w-[100%] h-32 relative" style={{
+                background: darkMode ? `linear-gradient(to right, ${ThemeColor.darkMode},white)` : `linear-gradient(to right, ${ThemeColor.primary}, white)`,
                 boxSizing:'border-box',
                 padding:'10px',
-                boxShadow: darkMode ? ThemeColor.darkShadow!.heavy : ''
+                boxShadow: darkMode ? ThemeColor.darkShadow!.heavy : '',
+                borderLeft: darkMode ? `2px solid ${ThemeColor.primary}`:'',
+                borderRadius: darkMode ? '8px': '1rem'
             }}>
                 <img src={'/dart.png'} alt="Clarity Logo" className="w-24 h-24 rounded-full absolute right-5 bottom-1 -rotate-6"/>
 
@@ -309,8 +322,10 @@ useEffect(() => {
             <div className="w-full rounded-3xl h-auto flex justify-center shadow items-center flex-col relative bg-white" style={{
                 boxSizing:'border-box',
                 padding:'20px',
-                backgroundColor: darkMode ? ThemeColor.shadowXg : '',
-                boxShadow: darkMode ? ThemeColor.darkShadow!.heavy : ''
+                backgroundColor: darkMode ? ThemeColor.darkMode : '',
+                boxShadow: darkMode ? ThemeColor.darkShadow!.heavy : '',
+                borderLeft: darkMode ? `2px solid lightgreen`:'',
+                borderRadius: darkMode ? '8px': '1rem'
             }}>
                     <div
                      className="flex items-center gap-2 absolute top-2 left-4 shadow-xl p-1 pr-2" style={{
@@ -350,8 +365,10 @@ useEffect(() => {
                 {/* Third Container */}
 
              <div className="w-full rounded-3xl h-auto shadow relative flex justify-center items-center flex-col" style={{
-              backgroundColor: darkMode ? ThemeColor.shadowXg : '',
-              boxShadow: darkMode ? ThemeColor.darkShadow!.heavy : ''
+              backgroundColor: darkMode ? ThemeColor.darkMode : '',
+              boxShadow: darkMode ? ThemeColor.darkShadow!.heavy : '',
+              borderLeft: darkMode ? `2px solid yellow`:'',
+              borderRadius: darkMode ? '8px': '1rem'
              }}>
                 <div
                      className="flex justify-center items-center gap-2 ml-2 absolute top-2 left-2 p-1 pr-2 shadow-xl" style={{
@@ -386,7 +403,9 @@ useEffect(() => {
                   darkMode ? 'text':'text'
                   } className="absolute -bottom-2" color={darkMode ? 'primary':'inherit'} style={{color:darkMode ? 'white':ThemeColor.primary}} onClick={() => setCurrentPageIndex(2)}>View all Timers</Button>
                 <SizedBox height={20}/>
-
+                {displayItem && (<Destroy delay={30} className="fixed top-32 w-full p-2 flex justify-center items-center">
+                    <Fact content={facts || 'No data received'}></Fact>
+                </Destroy>)}
             </div>
         </div>    
     </>

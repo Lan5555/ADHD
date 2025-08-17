@@ -62,6 +62,10 @@ type WatchContextType = {
     setDarkMode:(val:any) => void;
     isTimeUp:boolean;
     setIsTimeUp: (val:boolean) => void;
+    isVisible:boolean;
+    setIsVisible:(val:boolean) => void;
+    facts:any;
+    setFacts:any
 };
 
 const WatchContext = createContext<WatchContextType | undefined>(undefined);
@@ -90,6 +94,8 @@ export const WatchProvider = ({ children }: { children: ReactNode }) => {
     const [timeOfDayIndex, setTimeOfDayIndex] = useState<number>(0);
     const [darkMode, setDarkMode] = useState<boolean>(false);
     const [isTimeUp, setIsTimeUp] = useState<boolean>(false);
+    const [isVisible, setIsVisible] = useState(true);
+    const [facts,setFacts] = useState();
 
     useEffect(() => {
    setPersistence(auth, browserLocalPersistence)
@@ -128,8 +134,19 @@ export const WatchProvider = ({ children }: { children: ReactNode }) => {
 
     // Call handler once to initialize state
     handleDarkModeChange(darkModeMediaQuery);
-
-    
+    const fetchRandomFact = async():Promise<void> => {
+        try{
+          const res = await fetch('https://uselessfacts.jsph.pl/random.json');
+          const data = await res.json();
+          setFacts(data.text);
+        }catch(err:any){
+          setOpen(true);
+          setSnackText(err.message);
+          setSnackSeverity('warning')
+        }
+      }
+     
+      fetchRandomFact();
     }, []);
 
     useEffect(() => {
@@ -202,7 +219,11 @@ export const WatchProvider = ({ children }: { children: ReactNode }) => {
                 darkMode,
                 setDarkMode,
                 isTimeUp,
-                setIsTimeUp
+                setIsTimeUp,
+                isVisible,
+                setIsVisible,
+                facts,
+                setFacts
             }}
         >
             {children}

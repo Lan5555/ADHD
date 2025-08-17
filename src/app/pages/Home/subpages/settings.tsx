@@ -14,7 +14,8 @@ const Settings:React.FC = () => {
     return <>
         <div className="w-full flex justify-center items-center flex-col gap-3">
         <div className="flex justify-start flex-col gap-2 shadow w-full p-2 rounded-2xl" style={{
-            boxShadow: darkMode ? ThemeColor.darkShadow!.light : ''
+            boxShadow: darkMode ? ThemeColor.darkShadow!.heavy : '',
+            
         }}>
         <h4 style={{
             color: darkMode ? 'white':''
@@ -30,7 +31,7 @@ const Settings:React.FC = () => {
 
         <SizedBox height={10}/>
         <div className="flex justify-start flex-col gap-2 shadow w-full p-2 rounded-2xl" style={{
-            boxShadow: darkMode ? ThemeColor.darkShadow!.light : ''
+            boxShadow: darkMode ? ThemeColor.darkShadow!.heavy : ''
         }}>
         <h4 style={{
             color: darkMode ? 'white':''

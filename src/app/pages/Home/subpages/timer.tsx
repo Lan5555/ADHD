@@ -164,10 +164,14 @@ const TimerPage: React.FC = () => {
         <SizedBox height={20} />
 
         <div className="flex gap-4 mb-2">
-          <Button onClick={goPrev} disabled={timerKeys.length <= 1}>
+          <Button onClick={goPrev} disabled={timerKeys.length <= 1} sx={{
+            backgroundColor: darkMode ? 'grey':''
+          }}>
             Prev
           </Button>
-          <Button onClick={goNext} disabled={timerKeys.length <= 1}>
+          <Button onClick={goNext} disabled={timerKeys.length <= 1} sx={{
+            backgroundColor: darkMode ? 'grey':''
+          }}>
             Next
           </Button>
         </div>

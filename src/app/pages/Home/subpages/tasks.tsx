@@ -61,7 +61,46 @@ const TaskPage:React.FC = () => {
             return(
             <ListTile
             key={key}
-             leading={<input type="checkbox" onChange={() => {}} checked={element['isCompleted']}/>} title={element['name']} trailing={<Wrap
+             leading={<input type="checkbox" checked={!!element['isCompleted']}
+              onChange={async(e) => {
+              const isNowChecked = e.target.checked;
+              try{
+                const dataRef = doc(db,'completedTask',userId!);
+                const docSnap = await getDoc(dataRef);
+                let newKey = "0";
+                let existingTasks = {} as Record<string,any>;
+                if (docSnap.exists()) {
+                  existingTasks = docSnap.data() as Record<string, any>;
+                  const keys = Object.keys(existingTasks).map(Number);
+                  const maxKey = keys.length > 0 ? Math.max(...keys) : -1;
+                  newKey = String(maxKey + 1);
+                  const data = await addOrUpdateUserData('completedTask',userId!,{
+                    [newKey]:{
+                    name:element['name'],
+                    category:element['category'],
+                    isCompleted: true
+                  }});
+                  if(data.success){
+                    setOpen(true);
+                    setSnackText('Task completed successfully');
+                    setSnackSeverity('success');
+                  }
+                  const updateValue = doc(db,'tasks',userId!);
+                  await updateDoc(updateValue, {
+                    [`${key}.isCompleted`]: true
+                  });
+
+                  setTask((prevTasks: { [x: string]: any }) => ({
+                  ...prevTasks,
+                  [key]: {
+                  ...prevTasks[key],
+                  isCompleted: isNowChecked,
+                  },
+                  }));
+                }
+              }catch(e){
+
+              }}}/>} title={element['name']} trailing={<Wrap
             content = {<small className="text-red-600 text-sm" style={{
                 fontSize:'8pt'
             }}>{element['category']}</small>}
@@ -76,8 +115,8 @@ const TaskPage:React.FC = () => {
             [`${key}`]:deleteField()
           }).then(() => {
             setOpen(true);
-      setSnackText('Deleted successfully');
-      setSnackSeverity('success');
+            setSnackText('Deleted successfully');
+            setSnackSeverity('success');
             setTask(tasks);
             setTask((prev:any) => {
               const updated = {...prev};
@@ -299,7 +338,9 @@ useEffect(() => {
 
        </div>
        {/* End */}
-       <div className="w-full rounded-2xl shadow p-2 relative">
+       <div className="w-full rounded-2xl shadow p-2 relative" style={{
+        borderLeft: darkMode ? `3px solid ${ThemeColor.primary}`:''
+       }}>
         <h2 className="text-gray-400 text-sm">Upcoming tasks: {taskLength}</h2>
         {Object.keys(tasks).length > 0 ? (
           FetchTasksOnLoad()
@@ -342,7 +383,9 @@ useEffect(() => {
        </div>
        {/* End */}
          <SizedBox height={5}/>
-        <div className="w-full rounded-2xl shadow p-2 opacity-50">
+        <div className="w-full rounded-2xl shadow p-2 opacity-50" style={{
+          borderLeft: darkMode ? `3px solid ${ThemeColor.green}`:''
+        }}>
         <h2 className="text-gray-400 text-sm">Completed tasks: {Object.keys(comingTasks).length}</h2>
         {FetchCompletedTaskOnLoad()}
           <SizedBox height={25} />
