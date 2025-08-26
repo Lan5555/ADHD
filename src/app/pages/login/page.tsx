@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import { ThemeColor } from "@/app/static/colors";
 
 const RenderSignUp: React.FC = () => {
-  const { IsSignUpVisible, ActivePageIndex, userId, isAuthReady, setActivePageIndex } = useWatch();
+  const { IsSignUpVisible, ActivePageIndex, userId, isAuthReady } = useWatch();
 
 
   if (!isAuthReady) {
