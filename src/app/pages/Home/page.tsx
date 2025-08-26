@@ -24,7 +24,7 @@ const HomePage:React.FC = () => {
                 <img src={'/3d-alarm.png'} style={{
                  height:'200px',
                  width:'200px'
-                }}/>
+                }} className="animate-bounce"/>
                 <h2 style={{
                     color:darkMode ? 'white':'black'
                 }}>This app isn't available for this device!<br></br>Please Switch to Mobile!</h2>
