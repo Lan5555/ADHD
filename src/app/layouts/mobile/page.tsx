@@ -21,22 +21,24 @@ import { toast } from "react-toastify";
 import { imgIcon } from "@/app/static/styles";
 import { ThemeColor } from "@/app/static/colors";
 import OverlayContent from "@/app/components/time_ip";
+import Journal from "@/app/components/journal";
 
 const MobileLayout:React.FC = () => {
 
     const {
           setIsTimeUp,
+          showJournal,
           currentPageIndex,setCurrentPageIndex,
           taskCount, taskLength,
-          setCount, setDarkMode,
+          setCount, setDarkMode, setShowJournal,
           isTimeUp,tasks, userId,timeOfDay, setTimeOfDayIndex,timeOfDayIndex, darkMode} = useWatch();
     const {fetchData} = UseFirebase();
     const [keyValue, setKeyValue] = useState<Record<any,any>>({});
     const divRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        divRef.current?.scrollTo(0,0);
-    },[]);
+    // useEffect(() => {
+    //     divRef.current?.scrollTo(0,0);
+    // },[]);
 
     useEffect(() => {
         const fetchData2 = async () => {
@@ -98,7 +100,8 @@ const MobileLayout:React.FC = () => {
              title={'Clarity tasks'}
              trailing={[
                 faBell,
-                timeOfDay[timeOfDayIndex]
+                timeOfDay[timeOfDayIndex],
+                faBook
              ]}
              onTrailingPressed={(index:number) => {
                 switch(index){
@@ -108,6 +111,9 @@ const MobileLayout:React.FC = () => {
                         1 : 0
                        );
                        setDarkMode((prev: any) => !prev);
+                    break;
+                    case 2:
+                        setShowJournal(true);
                     break;
                 }
              }}
@@ -127,9 +133,11 @@ const MobileLayout:React.FC = () => {
             <h1>No Page yet</h1>
             </div>
             )}
-        </div>
+            </div>
 
             {/* End */}
+            {/* Journal */}
+            {showJournal && (<Journal/>)}
         
               <SizedBox height={100}/>
              <BottomNav

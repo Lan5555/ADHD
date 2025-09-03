@@ -1,48 +1,63 @@
-'use client'
-import Overlay from "@/app/components/overlay";
-import { useWatch, WatchProvider } from "@/app/hooks/page_index";
-import RenderSignUp from "../login/page";
-import {ToastContainer} from 'react-toastify';
-import MobileLayout from "@/app/layouts/mobile/page";
+'use client';
+
+import { useWatch } from "@/app/hooks/page_index";
+import RenderSignUp from  "@/app/pages/login/page";
+import { ToastContainer } from 'react-toastify';
 import ShowMaterialSnackbar from "@/app/components/snackbar";
-import {useMediaQuery} from 'react-responsive';
+import { useMediaQuery } from 'react-responsive';
+import { useEffect, useState } from "react";
 
+const HomePage: React.FC = () => {
+  const { snackText, darkMode } = useWatch();
 
+  // 🔁 Hydration state to avoid mismatches between SSR and client
+  const [hydrated, setHydrated] = useState(false);
 
-const HomePage:React.FC = () => {
-    const {snackText} = useWatch();
-    const isMobile = useMediaQuery({ maxWidth: 767 });
-    const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 1024 });
-    const isDesktop = useMediaQuery({ minWidth: 1025 });
-    const {darkMode} = useWatch();
-    return <>
-            
-            {!isMobile ? <>
-            <div className="w-full h-screen flex justify-center items-center flex-col gap-2 animate-pulse" style={{
-                backgroundColor: darkMode ? 'black':'white'
-            }}>
-                <img src={'/3d-alarm.png'} style={{
-                 height:'200px',
-                 width:'200px'
-                }} className="animate-bounce"/>
-                <h2 style={{
-                    color:darkMode ? 'white':'black'
-                }}>This app isn't available for this device!<br></br>Please Switch to Mobile!</h2>
-            </div>
-            </> : (<RenderSignUp/>)}
-            {/* <MobileLayout/> */}
-            <ToastContainer/>
-            <ShowMaterialSnackbar
-            text={snackText || 'Some text'}
-            duration={3000}
-            anchor={{
-                vertical:'bottom',
-                horizontal:'center'
-            }}
-            />
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  // Only run media queries after hydration
+  const isMobile = useMediaQuery({ maxWidth: 600 });
+
+  if (!hydrated) {
+    return null; // or a spinner
+  }
+
+  const unsupportedMessage = (
+    <div
+      className="w-full h-screen flex justify-center items-center flex-col gap-2 animate-pulse"
+      style={{ backgroundColor: darkMode ? 'black' : 'white' }}
+    >
+      <img
+        src="/3d-alarm.png"
+        style={{ height: '200px', width: '200px' }}
+        className="animate-bounce"
+        alt="Unsupported"
+      />
+      <h2 style={{ color: darkMode ? 'white' : 'black' }}>
+        This app isn't available for this device!
+        <br />
+        Please switch to Mobile!
+      </h2>
+    </div>
+  );
+
+  return (
+    <>
+      {isMobile ? <RenderSignUp /> : unsupportedMessage}
+
+      <ToastContainer />
+      <ShowMaterialSnackbar
+        text={snackText || 'Some text'}
+        duration={3000}
+        anchor={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+      />
     </>
-}
+  );
+};
 
 export default HomePage;
-
-

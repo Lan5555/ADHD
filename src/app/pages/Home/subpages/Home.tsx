@@ -1,4 +1,5 @@
 'use client'
+import AddComponent from "@/app/components/add_item"
 import Fact from "@/app/components/fact"
 import ListTile from "@/app/components/ListTile"
 import Progress from "@/app/components/loader_div"
@@ -15,22 +16,28 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Button } from "@mui/material"
 import { onAuthStateChanged } from "firebase/auth"
 import { deleteField, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore"
+import { useRouter } from "next/navigation"
 import { CSSProperties, useEffect, useState } from "react"
 import { toast } from "react-toastify";
 
 const Home:React.FC = () => {
     
-    const {facts,setFacts,setCurrentPageIndex,
+    const {facts,setShowJournal,setCurrentPageIndex,
           taskCount, taskLength,
           setCount, setTaskLength,
-          FlexStart,tasks,setDescription, timer,setCurrentUserId,userId,setTask, setCompletedTask,setTimer, setOpen, setSnackSeverity, setSnackText,darkMode} = useWatch();
+          availableJournals,tasks,setAvailableJournals, timer,setShowJournalMain,userId,setTask, setCompletedTask,setTimer, setOpen, setSnackSeverity, setSnackText,darkMode} = useWatch();
     const colors:string[] = Object.values(ThemeColorSpecific);
     const {fetchDataByQuery,fetchData, addOrUpdateUserData} = UseFirebase();
     const [userName, setUserName] = useState<string>('');
     const [marked, setMarked] = useState<boolean>(false);
     const [displayItem, setDisplayItem] = useState<boolean>(false);
+    const route = useRouter();
+
+
+
 
   useEffect(() => {
+
   const fetchData2 = async () => {
     if (!userId) return; // Wait until userId is available
 
@@ -54,6 +61,7 @@ const Home:React.FC = () => {
     }
   };
 
+
   const fetchUserName = async () => {
     if(!userId) return;
     try{
@@ -67,6 +75,8 @@ const Home:React.FC = () => {
       setSnackSeverity('warning');
     }
   }
+
+  //fetchCompleted tasks
   const fetchCompletedTasks = async () => {
     if(!userId) return;
     try{
@@ -80,6 +90,7 @@ const Home:React.FC = () => {
     }
   }
 
+  //fetchTime
   const fetchTime = async () => {
     if(!userId) return;
     try{
@@ -91,7 +102,19 @@ const Home:React.FC = () => {
   }
 
 
-  
+  // Fetch journals
+  const fetchJournals = async():Promise<void> => {
+    const dataRef = doc(db,'journals', userId!);
+    const dataCheck = await getDoc(dataRef);
+    if(dataCheck.exists()){
+      const data = dataCheck.data() as any;
+      setAvailableJournals(data);
+    }else{
+      setAvailableJournals({}) ;
+    }
+  }
+
+  fetchJournals();
   fetchUserName();
   fetchData2();
   fetchCompletedTasks();
@@ -315,7 +338,7 @@ useEffect(() => {
                 <h1 className="text-white font-bold text-xl ml-2 font-serif">Hello  <small className="text-gray-100 animate-pulse">&nbsp;{userName}!</small></h1>
                 <p className="text-white opacity-75 ml-2 text-[10pt]">You've completed {taskCount} out of {taskLength}<br /> created tasks!</p>
                 <SizedBox height={20}/>
-                <Progress width={'65%'} height={'10px'} color={'white'} textColor={darkMode ? 'white':'black'} progressWidth={`${(taskCount / taskLength) * 100 }%`} text={`${Math.ceil((taskCount / taskLength) * 100) || 0}`}/>
+                <Progress width={'65%'} height={'10px'} color={'white'} textColor={darkMode ? 'black':'black'} progressWidth={`${(taskCount / taskLength) * 100 }%`} text={`${Math.ceil((taskCount / taskLength) * 100) || 0}`}/>
             </div>
             <SizedBox height={20}/>
             {/* Second Container */}
@@ -361,6 +384,39 @@ useEffect(() => {
                 <Button variant={darkMode ? 'text':'text'} className="relative top-3" color={darkMode ? 'secondary':'inherit'} style={{color:darkMode ? 'white':ThemeColor.primary}} size={'small'} onClick={() => setCurrentPageIndex(1)}>View all Tasks</Button>
             </div>
             {/* End */}
+            {/* Journal toggler */}
+                <SizedBox height={10}/>
+
+            {Object.keys(availableJournals).length > 0 ? (<div className="w-full rounded h-auto shadow relative flex justify-center items-center flex-col" style={{
+              backgroundColor: darkMode ? ThemeColor.darkMode : '',
+              boxShadow: darkMode ? ThemeColor.darkShadow!.heavy : '',
+                }}>
+              <ListTile 
+               type="trail"
+               isUnderline={false}
+               leading={<Wrap
+                content={<img src={'/list.png'} style={{height:'20px',width:'20px'}}/>}
+                colorValue="#f39c12"/>}
+                title="Journal"
+                subtitle="Write your thoughts and feelings"
+                subtitleStyle={{fontSize:'8pt', color:darkMode ? 'white':''}}
+                Bold={true}
+                titleStyle={{fontSize:'10pt', fontWeight:'bold',color:darkMode ? 'white':''}}
+                trailing={<Button variant={darkMode ? 'text':'text'} style={{color:darkMode ? 'white':ThemeColor.primary}} size={'small'} onClick={() => {
+                  route.push('/pages/Journal');
+                }}>View</Button>}
+               />
+               </div>) : (<AddComponent
+                   image={'/list.png'}
+                   viewText="View all Journals"
+                   viewCallBack={() => {
+                    setShowJournalMain(true)
+                    route.push('/pages/Journal');
+                   }}
+                   title="Journals"
+                   name="Journal" callback={() => {
+                  setShowJournal(true);
+               }}></AddComponent>)}
             <SizedBox height={20}/>
                 {/* Third Container */}
 
@@ -406,7 +462,9 @@ useEffect(() => {
                 {displayItem && (<Destroy delay={30} className="fixed top-32 w-full p-2 flex justify-center items-center">
                     <Fact content={facts || 'No data received'}></Fact>
                 </Destroy>)}
+
             </div>
+            
         </div>    
     </>
 }

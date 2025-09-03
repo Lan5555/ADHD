@@ -65,7 +65,13 @@ type WatchContextType = {
     isVisible:boolean;
     setIsVisible:(val:boolean) => void;
     facts:any;
-    setFacts:any
+    setFacts:any;
+    showJournal:boolean;
+    setShowJournal:(val:boolean) => void;
+    availableJournals:any;
+    setAvailableJournals:any;
+    showJournalMain:boolean;
+    setShowJournalMain: (val:boolean) => void;
 };
 
 const WatchContext = createContext<WatchContextType | undefined>(undefined);
@@ -96,6 +102,9 @@ export const WatchProvider = ({ children }: { children: ReactNode }) => {
     const [isTimeUp, setIsTimeUp] = useState<boolean>(false);
     const [isVisible, setIsVisible] = useState(true);
     const [facts,setFacts] = useState();
+    const [showJournal,setShowJournal] = useState(false);
+    const [availableJournals, setAvailableJournals] = useState<Record<any,any>>({});
+    const [showJournalMain, setShowJournalMain] = useState<boolean>(false);
 
     useEffect(() => {
    setPersistence(auth, browserLocalPersistence)
@@ -223,7 +232,13 @@ export const WatchProvider = ({ children }: { children: ReactNode }) => {
                 isVisible,
                 setIsVisible,
                 facts,
-                setFacts
+                setFacts,
+                showJournal,
+                setShowJournal,
+                availableJournals,
+                setAvailableJournals,
+                showJournalMain,
+                setShowJournalMain
             }}
         >
             {children}

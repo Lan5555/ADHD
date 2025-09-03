@@ -19,6 +19,17 @@
   }
 }
 
+@font-face {
+  font-family: 'Gowun';
+  src: url('/Gowun_Batang/GowunBatang-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+*{
+  font-family: 'Gowun';
+}
+
 
 
 .shadow-xg{
