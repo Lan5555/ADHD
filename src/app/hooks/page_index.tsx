@@ -72,6 +72,8 @@ type WatchContextType = {
     setAvailableJournals:any;
     showJournalMain:boolean;
     setShowJournalMain: (val:boolean) => void;
+    mounted:boolean;
+    setMounted: (val:boolean) => void;
 };
 
 const WatchContext = createContext<WatchContextType | undefined>(undefined);
@@ -105,6 +107,7 @@ export const WatchProvider = ({ children }: { children: ReactNode }) => {
     const [showJournal,setShowJournal] = useState(false);
     const [availableJournals, setAvailableJournals] = useState<Record<any,any>>({});
     const [showJournalMain, setShowJournalMain] = useState<boolean>(false);
+    const [mounted, setMounted] = useState(true);
 
     useEffect(() => {
    setPersistence(auth, browserLocalPersistence)
@@ -238,7 +241,9 @@ export const WatchProvider = ({ children }: { children: ReactNode }) => {
                 availableJournals,
                 setAvailableJournals,
                 showJournalMain,
-                setShowJournalMain
+                setShowJournalMain,
+                mounted,
+                setMounted
             }}
         >
             {children}

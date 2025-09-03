@@ -3,6 +3,7 @@ import AddComponent from "@/app/components/add_item"
 import Fact from "@/app/components/fact"
 import ListTile from "@/app/components/ListTile"
 import Progress from "@/app/components/loader_div"
+import MoodChecker from "@/app/components/mood_checker"
 import Wrap from "@/app/components/wrap"
 import { UseFirebase } from "@/app/hooks/firebase_hooks"
 import { useWatch } from "@/app/hooks/page_index"
@@ -24,6 +25,7 @@ const Home:React.FC = () => {
     
     const {facts,setShowJournal,setCurrentPageIndex,
           taskCount, taskLength,
+          mounted, setMounted,
           setCount, setTaskLength,
           availableJournals,tasks,setAvailableJournals, timer,setShowJournalMain,userId,setTask, setCompletedTask,setTimer, setOpen, setSnackSeverity, setSnackText,darkMode} = useWatch();
     const colors:string[] = Object.values(ThemeColorSpecific);
@@ -325,6 +327,9 @@ useEffect(() => {
         {/* Container */}
 
         <div className="flex justify-center items-center flex-col w-full h-[90vh] gap-3">
+           {/* Mood check */}
+            {mounted && (<MoodChecker emojis={['😀', '😐', '😔', '😡', '😴']} text="How are you feeling today?"/>)}
+            {/* End */}
             <div className="shadow-2xl w-[100%] h-32 relative" style={{
                 background: darkMode ? `linear-gradient(to right, ${ThemeColor.darkMode},white)` : `linear-gradient(to right, ${ThemeColor.primary}, white)`,
                 boxSizing:'border-box',
@@ -459,9 +464,11 @@ useEffect(() => {
                   darkMode ? 'text':'text'
                   } className="absolute -bottom-2" color={darkMode ? 'primary':'inherit'} style={{color:darkMode ? 'white':ThemeColor.primary}} onClick={() => setCurrentPageIndex(2)}>View all Timers</Button>
                 <SizedBox height={20}/>
-                {displayItem && (<Destroy delay={30} className="fixed top-32 w-full p-2 flex justify-center items-center">
-                    <Fact content={facts || 'No data received'}></Fact>
-                </Destroy>)}
+                {displayItem && !mounted && (
+                    <Destroy delay={30} className="fixed top-32 w-full p-2 flex justify-center items-center">
+                        <Fact content={facts || 'No data received'}></Fact>
+                    </Destroy>
+                )}
 
             </div>
             
