@@ -601,6 +601,7 @@ const Home:React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
+              className="w-full rounded-3xl h-44 shadow relative flex justify-center items-center flex-col"
             >
               <AddComponent
                 image={'/list.png'}
