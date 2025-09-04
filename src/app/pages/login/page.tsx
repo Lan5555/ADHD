@@ -26,7 +26,7 @@ const RenderSignUp: React.FC = () => {
     return (
       <div
         className="flex justify-center items-center h-screen flex-col gap-2 animate-pulse"
-        style={{ backgroundColor: ThemeColor.primary }}
+        style={{ backgroundColor: ThemeColor.darkMode }}
       >
         <CircularProgress sx={{ color: "white" }} />
         <h2 className="text-white text-sm">Retrieving previous state!</h2>

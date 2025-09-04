@@ -30,9 +30,8 @@ const HomePage: React.FC = () => {
       style={{ backgroundColor: darkMode ? 'black' : 'white' }}
     >
       <img
-        src="/3d-alarm.png"
-        style={{ height: '200px', width: '200px' }}
-        className="animate-bounce"
+        src="/check.gif"
+        style={{ height: '250px', width: '300px' }}
         alt="Unsupported"
       />
       <h2 style={{ color: darkMode ? 'white' : 'black' }}>

@@ -1,4 +1,4 @@
-import { faBold, faClose, faItalic, faR, faRedo, faUnderline } from "@fortawesome/free-solid-svg-icons";
+import { faBold, faClose, faEthernet, faItalic, faR, faRedo, faUnderline } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { addDoc, doc, setDoc } from "firebase/firestore";
 import { useRef } from "react";
@@ -11,7 +11,7 @@ const Journal:React.FC = () => {
     const inputRef = useRef<HTMLInputElement>(null);
     return (
         <div className="flex justify-center items-center h-screen w-full p-2 fixed top-0 left-0 z-40 pop-up">
-             <form className="w-full h-[80vh] flex justify-center rounded shadow bg-white p-1 font-bold flex-col gap-2 relative" onSubmit={async(e) => {
+             <form className="w-full h-[70vh] flex justify-center rounded shadow bg-white p-1 font-bold flex-col gap-2 relative" onSubmit={async(e) => {
                 e.preventDefault();
                 if(!userId) return;
                     // Save to Firestore
@@ -39,6 +39,10 @@ const Journal:React.FC = () => {
                     
              }}>
             <FontAwesomeIcon icon={faClose} className="absolute top-4 right-4 text-gray-500 hover:text-black cursor-pointer" onClick={() => setShowJournal(false)}/>
+            <FontAwesomeIcon icon={faEthernet} className="absolute top-4 right-13 text-gray-500 hover:text-black cursor-pointer" onClick={() => {
+                textRef.current?.blur();
+                inputRef.current?.blur();
+            }}/>
             <h2 className="text-center" style={{
                 background: 'linear-gradient(90deg, #ff8a00, #e52e71)',
                 backgroundClip: 'text',

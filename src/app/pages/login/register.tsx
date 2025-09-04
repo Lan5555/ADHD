@@ -1,178 +1,306 @@
+'use client';
 import { UseFirebase } from "@/app/hooks/firebase_hooks";
 import { useWatch } from "@/app/hooks/page_index";
-import { faEnvelope, faEye, faEyeSlash, faGlobe, faPerson, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faEye, faEyeSlash, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, CircularProgress } from "@mui/material";
+import { Button, CircularProgress, TextField, InputAdornment, IconButton, Box, Typography } from "@mui/material";
 import { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
+import { motion } from "framer-motion";
 
-const Register:React.FC = () => {
-    const {toggleSignUp,setActivePageIndex, isToolBarShown,setToolBarShown,setOpen,setSnackSeverity,setSnackText} = useWatch();
-    const {SignUp,SignInWithGoogle,addData} = UseFirebase();
-    const [email, setUserEmail] = useState<string>('');
-    const [password, setUserPassword] = useState<string>('');
-    const [userName, setUserName] = useState<string>('');
-    const [confirmPassword,setConfirmPaswword] = useState<string>('');
-    const [loading, setLoading] = useState<boolean>(false);
-    const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
-    const [userId,setUserId] = useState<string>('');
+const Register: React.FC = () => {
+  const {
+    toggleSignUp, setActivePageIndex, setOpen, setSnackSeverity, setSnackText, darkMode
+  } = useWatch();
 
+  const { SignUp, SignInWithGoogle, addData } = UseFirebase();
+
+  const [email, setUserEmail] = useState('');
+  const [password, setUserPassword] = useState('');
+  const [userName, setUserName] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (password !== confirmPassword) {
-    setOpen(true);
-    setSnackText('Passwords dont match');
-    setSnackSeverity('warning');
-    return;
-  }
-
-  setLoading(true);
-  try {
-    const data = await SignUp({ email, password });
-
-    if (data.success) {
+    if (password !== confirmPassword) {
       setOpen(true);
-      setSnackText('Registered successfully');
-      setSnackSeverity('success');
-
-      const user = data.data; 
-
-      const saveResult = await addData(`users/${user.uid}`, {
-        userId:user.uid,
-        name:userName,
-        email:user.email,
-      });
-      setActivePageIndex(1);
-
-      if (saveResult.error) {
-        toast.warning(saveResult.error);
-      }
-
-    } else {
-      alert(data.error);
+      setSnackText('Passwords don\'t match');
+      setSnackSeverity('warning');
+      return;
     }
-  } catch (err) {
-    console.error(err);
-    setOpen(true);
-    setSnackText('Oops something went wrong!');
-    setSnackSeverity('warning');
-  } finally {
-    setLoading(false);
-  }
-};
 
+    setLoading(true);
+    try {
+      const data = await SignUp({ email, password });
+
+      if (data.success) {
+        setOpen(true);
+        setSnackText('Registered successfully');
+        setSnackSeverity('success');
+
+        const user = data.data;
+
+        const saveResult = await addData(`users/${user.uid}`, {
+          userId: user.uid,
+          name: userName,
+          email: user.email,
+        });
+
+        setActivePageIndex(1);
+
+        if (saveResult.error) {
+          toast.warning(saveResult.error);
+        }
+
+      } else {
+        alert(data.error);
+      }
+    } catch (err) {
+      console.error(err);
+      setOpen(true);
+      setSnackText('Oops something went wrong!');
+      setSnackSeverity('warning');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSignInWithGoogle = async () => {
-  setLoading(true);
-  try {
-    const data = await SignInWithGoogle();
+    setLoading(true);
+    try {
+      const data = await SignInWithGoogle();
 
-    if (data.success && data.data) {
-      setOpen(true);
-      setSnackText('Registered successfully');
-      setSnackSeverity('success');
+      if (data.success && data.data) {
+        setOpen(true);
+        setSnackText('Registered successfully');
+        setSnackSeverity('success');
 
-      const user = data.data;
+        const user = data.data;
 
-      const saveResult = await addData(`users/${user.uid}`, {
-        userId: user.uid,
-        name: user.displayName || userName, // fallback to userName if displayName is missing
-        email: user.email,
-      });
-      setActivePageIndex(1);
+        const saveResult = await addData(`users/${user.uid}`, {
+          userId: user.uid,
+          name: user.displayName || userName,
+          email: user.email,
+        });
 
-      if (saveResult.error) {
-        toast.warning(saveResult.error);
+        setActivePageIndex(1);
+
+        if (saveResult.error) {
+          toast.warning(saveResult.error);
+        }
+      } else {
+        setOpen(true);
+        setSnackText('Sign in error');
+        setSnackSeverity('warning');
       }
-    } else {
+    } catch (err) {
+      console.error(err);
       setOpen(true);
-      setSnackText('Sign in error');
+      setSnackText('Oops something went wrong');
       setSnackSeverity('warning');
+    } finally {
+      setLoading(false);
     }
-  } catch (err) {
-    console.error(err);
-    setOpen(true);
-    setSnackText('Oops something went wrong');
-    setSnackSeverity('warning');
-  } finally {
-    setLoading(false);
-  }
+  };
+
+  // Define colors depending on darkMode
+  const bgColor = darkMode ? '#121212' : '#f9f9f9';
+  const formBgColor = darkMode ? '#1e1e1e' : '#fff';
+  const textColor = darkMode ? '#e0e0e0' : '#222';
+  const buttonBgColor = darkMode ? '#333' : 'black';
+  const buttonHoverColor = darkMode ? '#555' : '#333';
+
+  return (
+    <Box
+      className="w-full min-h-screen flex justify-center items-center p-4"
+      sx={{ backgroundColor: bgColor }}
+    >
+      <motion.form
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        onSubmit={handleSubmit}
+        className="w-full max-w-md p-8 shadow-xl rounded-xl flex flex-col gap-5"
+        style={{ backgroundColor: formBgColor }}
+      >
+        <Typography
+          variant="h4"
+          className="text-center font-semibold"
+          style={{ color: textColor }}
+        >
+          Create an Account
+        </Typography>
+
+        {/* Username */}
+        <TextField
+          fullWidth
+          required
+          label="Username"
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <FontAwesomeIcon icon={faUser} style={{ color: textColor }} />
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            input: { color: textColor },
+            label: { color: textColor },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': { borderColor: darkMode ? '#444' : '#ccc' },
+              '&:hover fieldset': { borderColor: darkMode ? '#666' : '#888' },
+              '&.Mui-focused fieldset': { borderColor: buttonBgColor },
+            },
+          }}
+        />
+
+        {/* Email */}
+        <TextField
+          fullWidth
+          required
+          label="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setUserEmail(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <FontAwesomeIcon icon={faEnvelope} style={{ color: textColor }} />
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            input: { color: textColor },
+            label: { color: textColor },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': { borderColor: darkMode ? '#444' : '#ccc' },
+              '&:hover fieldset': { borderColor: darkMode ? '#666' : '#888' },
+              '&.Mui-focused fieldset': { borderColor: buttonBgColor },
+            },
+          }}
+        />
+
+        {/* Password */}
+        <TextField
+          fullWidth
+          required
+          label="Password"
+          type={passwordVisible ? 'text' : 'password'}
+          value={password}
+          onChange={(e) => setUserPassword(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <FontAwesomeIcon icon={faUser} style={{ color: textColor }} />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={() => setPasswordVisible(prev => !prev)} sx={{ color: textColor }}>
+                  <FontAwesomeIcon icon={passwordVisible ? faEye : faEyeSlash} />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            input: { color: textColor },
+            label: { color: textColor },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': { borderColor: darkMode ? '#444' : '#ccc' },
+              '&:hover fieldset': { borderColor: darkMode ? '#666' : '#888' },
+              '&.Mui-focused fieldset': { borderColor: buttonBgColor },
+            },
+          }}
+        />
+
+        {/* Confirm Password */}
+        <TextField
+          fullWidth
+          required
+          label="Confirm Password"
+          type={passwordVisible ? 'text' : 'password'}
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <FontAwesomeIcon icon={faUser} style={{ color: textColor }} />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={() => setPasswordVisible(prev => !prev)} sx={{ color: textColor }}>
+                  <FontAwesomeIcon icon={passwordVisible ? faEye : faEyeSlash} />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            input: { color: textColor },
+            label: { color: textColor },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': { borderColor: darkMode ? '#444' : '#ccc' },
+              '&:hover fieldset': { borderColor: darkMode ? '#666' : '#888' },
+              '&.Mui-focused fieldset': { borderColor: buttonBgColor },
+            },
+          }}
+        />
+
+        {/* Submit Button */}
+        <Button
+          variant="contained"
+          type="submit"
+          disabled={loading}
+          sx={{
+            backgroundColor: buttonBgColor,
+            color: 'white',
+            '&:hover': {
+              backgroundColor: buttonHoverColor
+            }
+          }}
+        >
+          {loading ? <CircularProgress size={24} color="inherit" /> : 'Sign Up'}
+        </Button>
+
+        {/* Switch to login */}
+        <Box className="text-center">
+          <Typography
+            variant="body2"
+            style={{ color: textColor }}
+          >
+            Already have an account?{' '}
+            <span
+              className="text-blue-600 cursor-pointer"
+              onClick={() => toggleSignUp((prev: any) => !prev)}
+            >
+              Log in
+            </span>
+          </Typography>
+        </Box>
+
+        {/* Divider with Google sign in */}
+        <Box className="flex justify-center items-center gap-3 mt-2">
+          <Typography
+            variant="body2"
+            style={{ color: textColor }}
+          >
+            or sign in with
+          </Typography>
+          <img
+            src="/google.png"
+            alt="Google"
+            className="h-6 w-6 cursor-pointer"
+            onClick={handleSignInWithGoogle}
+          />
+        </Box>
+      </motion.form>
+    </Box>
+  );
 };
-
-
-
-    return (
-        <div className="w-full h-screen flex justify-center items-center" style={{
-            backgroundImage:"url('/white2.jpeg')",
-            backgroundSize:'cover',
-            backgroundPosition:'center',
-            backgroundRepeat:'no-repeat',
-
-        }}>
-        <form className="w-[90%] h-[85vh] backdrop-blur-sm rounded-2xl shadow flex justify-center items-center gap-10 flex-col relative" onSubmit={(e) => handleSubmit(e)}>
-         <h1 className="text-black text-3xl font-serif animate-pulse">Register</h1>
-         <div className="flex justify-center items-center shadow p-1 relative w-[90%]">
-          <FontAwesomeIcon icon={faUser} style={{
-            height:'20px',
-            width:'20px'
-          }} className="absolute left-2"/>
-         <input className="bg-none p-2 pl-2 w-[80%] outline-none text-sm" placeholder="User name" onChange={(val) => setUserName(val.target.value)} required></input>
-         </div>
-         {/* Mail */}
-          <div className="flex justify-center items-center shadow p-1 relative w-[90%]">
-          <FontAwesomeIcon icon={faEnvelope} style={{
-            height:'20px',
-            width:'20px'
-          }} className="absolute left-2"/>
-         <input type="email" className="bg-none p-2 pl-2 w-[80%] outline-none text-sm" placeholder="Email" onChange={(val) => setUserEmail(val.target.value)} required></input>
-         </div>
-        <div className="flex justify-center items-center shadow p-1 relative w-[90%]">
-          <FontAwesomeIcon icon={faUser} style={{
-            height:'20px',
-            width:'20px'
-          }} className="absolute left-2"/>
-         <input type= {passwordVisible ? 'text':"password"} className="bg-none p-2 pl-2 w-[80%] outline-none text-sm" placeholder="Password" onChange={(val) => setUserPassword(val.target.value)} required></input>
-         <FontAwesomeIcon icon={passwordVisible ? faEye : faEyeSlash} className="absolute right-2" style={{
-            height:'20px',
-            width:'20px'
-         }} onClick={() => setPasswordVisible(prev => !prev)}/>
-         </div>
-          <div className="flex justify-center items-center shadow p-1 relative w-[90%]">
-          <FontAwesomeIcon icon={faUser} style={{
-            height:'30px',
-            width:'20px'
-          }} className="absolute left-2" />
-         <input type={passwordVisible ? 'text':"password"} className="bg-none p-2 pl-2 w-[80%] outline-none text-sm" placeholder="Confirm password" onChange={(val) => setConfirmPaswword(val.target.value)} required></input>
-         <FontAwesomeIcon icon={passwordVisible ? faEye : faEyeSlash} className="absolute right-2" style={{
-            height:'30px',
-            width:'20px'
-         }} onClick={() => setPasswordVisible(prev => !prev)}/>
-         </div>
-         <Button variant={'contained'} sx={{
-            width:'90%',
-            backgroundColor:'antiquewhite',
-            color:'black'
-         }} type={'submit'}>
-            {loading ? <CircularProgress color={'inherit'} sx={{
-                color:'white'
-            }}/> : 'Sign Up'}
-         </Button>
-         <div className="flex justify-center items-center gap-2">
-            <p className="text-sm">Already have an account?</p>
-            <a className="text-blue-600 text-sm" onClick={() => toggleSignUp((prev: any) => !prev)}>Log in</a>
-         </div>
-         <div className="flex justify-center items-center gap-2">
-            <p className="text-sm">Or</p>
-          <p className="text-sm">Sign in with</p><img src={'/google.png'} style={{
-            height:'20px',
-            width:'20px'
-          }} onClick={() => handleSignInWithGoogle()}/>
-         </div>
-        </form>
-        </div>
-    );
-}
 
 export default Register;
