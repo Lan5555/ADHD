@@ -5,6 +5,7 @@ import { ThemeColor } from "../static/colors"
 import { imgIcon } from "../static/styles"
 import SizedBox from "../hooks/SizedBox"
 import Button from "@mui/material/Button"
+import { CSSProperties } from "@mui/material"
 
 interface itemProps{
     title:string
@@ -13,16 +14,18 @@ interface itemProps{
     callback?: () => void
     viewText?:string
     viewCallBack?: () => void
+    style?:CSSProperties
 }
 
-const AddComponent:React.FC<itemProps> = ({name, callback, title, image, viewText, viewCallBack}) => {
+const AddComponent:React.FC<itemProps> = ({name, callback, title, image, viewText, viewCallBack, style}) => {
     const {darkMode} = useWatch();
     return (
         <div className="w-full rounded-3xl h-44 shadow relative flex justify-center items-center flex-col" style={{
                       backgroundColor: darkMode ? ThemeColor.darkMode : '',
                       boxShadow: darkMode ? ThemeColor.darkShadow!.heavy : '',
                       borderLeft: darkMode ? `2px solid yellow`:'',
-                      borderRadius: darkMode ? '8px': '1rem'
+                      borderRadius: darkMode ? '8px': '1rem',
+                        ...style
                      }}>
                         <div
                              className="flex justify-center items-center gap-2 ml-2 absolute top-2 left-2 p-1 pr-2 shadow-xl" style={{

@@ -12,10 +12,10 @@ import { ThemeColor, ThemeColorSpecific } from "@/app/static/colors"
 import { db } from "@/app/static/firebase"
 import useLocalStorage from "@/app/static/save"
 import { imgIcon } from "@/app/static/styles"
-import { faAngleDown, faClock, faEllipsisH, faPlus, faQuestion, faSearch } from "@fortawesome/free-solid-svg-icons"
+import { faAngleDown, faBook, faClock, faEllipsisH, faList, faPen, faPlus, faQuestion, faSearch, faTasks } from "@fortawesome/free-solid-svg-icons"
 import { faClipboardList } from "@fortawesome/free-solid-svg-icons/faClipboardList"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { Button, Fab, Switch } from "@mui/material"
+import { Button, Fab, MenuItem, Select, Switch, TextField } from "@mui/material"
 import { deleteDoc, deleteField, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore"
 import { useEffect, useRef, useState } from "react"
 import { toast } from "react-toastify"
@@ -26,7 +26,7 @@ const TaskPage:React.FC = () => {
     const colors:string[] = Object.values(ThemeColorSpecific);
     const {tasks, completedTask, setToolBarShown, showOverlay, setTask,userId, setCurrentPageIndex,taskLength, setIsAsking, setOpen,setSnackSeverity,setSnackText} = useWatch();
     const [nameValue, setNameValue] = useState('');
-    const [cat, setCategory] = useState('chores');
+    const [cat, setCategory] = useState<string>('chores'); // Ensure default value is always set
     const [completed, setCompleted] = useState(false);
     const [currentTime, setCurrentTime] = useState('');
     const {SaveToLocalStorage, FetchFromLocalStorage} = useLocalStorage();
@@ -287,7 +287,7 @@ useEffect(() => {
         <div className="flex justify-center items-center p-2 gap-4">
         <div 
           ref={dropDownRef}
-          className="w-52 h-9 rounded-3xl bg-gray-100 flex justify-center items-center relative" style={{
+          className="w-58 h-9 rounded bg-gray-100 flex justify-center items-center relative" style={{
             border: '1px solid rgba(0,0,0,0.1)',
         }}>
         <FontAwesomeIcon icon={faSearch} style={{
@@ -323,7 +323,7 @@ useEffect(() => {
 
        )
        }
-       <div className="w-24 h-9 rounded-3xl bg-gray-100 flex justify-center items-center gap-1" style={{
+       <div className="w-24 h-9 rounded bg-gray-100 flex justify-center items-center gap-1" style={{
         border: '1px solid blueviolet',
        }} onClick={() => {
           setCurrentSheetState(prev => !prev);
@@ -338,8 +338,8 @@ useEffect(() => {
 
        </div>
        {/* End */}
-       <div className="w-full rounded-2xl shadow p-2 relative" style={{
-        borderLeft: darkMode ? `3px solid ${ThemeColor.primary}`:''
+       <div className="w-full rounded-2xl shadow p-2 relative mt-2" style={{
+        border: darkMode ? `1px solid ${ThemeColor.primary}`:''
        }}>
         <h2 className="text-gray-400 text-sm">Upcoming tasks: {taskLength}</h2>
         {Object.keys(tasks).length > 0 ? (
@@ -383,13 +383,16 @@ useEffect(() => {
        </div>
        {/* End */}
          <SizedBox height={5}/>
+
         <div className="w-full rounded-2xl shadow p-2 opacity-50" style={{
-          borderLeft: darkMode ? `3px solid ${ThemeColor.green}`:''
+          border: darkMode ? '1px solid white':''
         }}>
         <h2 className="text-gray-400 text-sm">Completed tasks: {Object.keys(comingTasks).length}</h2>
         {FetchCompletedTaskOnLoad()}
           <SizedBox height={25} />
         </div>
+
+        
         <Fab
           variant="extended"
           color="primary"
@@ -415,18 +418,47 @@ useEffect(() => {
            />
         </Fab>
         <ToolBar 
-           content={<div className="flex justify-center items-center flex-col gap-5 w-60">
+           content={
+           <div className="flex justify-center items-center flex-col gap-5 w-60">
           <h4 className="text-sm">Task description</h4>
-          <input type="text" placeholder="Enter task description" className="w-full p-2 rounded-xl bg-gray-100 outline-none border-none text-sm" style={{
+          {/* <input type="text" placeholder="Enter task description" className="w-full p-2 rounded-xl bg-gray-100 outline-none border-none text-sm" style={{
             paddingLeft: '10px',
-          }} onChange={(el) => setNameValue(el.target.value)}/>
+          }} onChange={(el) => setNameValue(el.target.value)}/> */}
+          <TextField
+            variant="outlined"
+            label="Description"
+            placeholder="Enter task description"
+            slotProps={{
+              inputLabel: {
+                shrink: true, // Ensures label moves up on focus or when value is present
+              },
+              input: {
+                startAdornment: (
+                  <FontAwesomeIcon icon={faTasks} style={{ marginRight: 8, color: 'gray' }} />
+                ),
+                endAdornment: (
+                  <FontAwesomeIcon icon={faPen} style={{ marginLeft: 8, color: 'gray' }} />
+                ),
+              }
+            }}
+            onChange={(el) => setNameValue(el.target.value)}
+            required
+            />
           <label htmlFor="set-category" className="text-sm">Select Category</label>
-          <select name="category" className="w-full p-2 rounded-lg bg-gray-100 outline-none border-none" id="set-category" onChange={(val) => setCategory(val.target.value)}>
-            <option value="chores">Chores</option>
-            <option value="work">Work</option>
-            <option value="personal">Personal</option>
-            <option value="other">Other</option>
-          </select>
+          <Select
+            name="category"
+            label="Category"
+            className="w-full text-black h-10"
+            id="set-category"
+            onChange={(val) => setCategory(val.target.value as string)}
+            required
+            value={cat || 'chores'} // Always provide a fallback value
+          >
+            <MenuItem value="chores">Chores</MenuItem>
+            <MenuItem value="work">Work</MenuItem>
+            <MenuItem value="personal">Personal</MenuItem>
+            <MenuItem value="other">Other</MenuItem>
+          </Select>
         </div>} type={'question'} onPressed={(index) => HandleTaskChange(index)}/>
             </div>
             <Overlay/>

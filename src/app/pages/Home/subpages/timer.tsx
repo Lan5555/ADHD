@@ -4,9 +4,9 @@ import ListTile from "@/app/components/ListTile";
 import PageCount from "@/app/components/page_count";
 import { useWatch } from "@/app/hooks/page_index";
 import SizedBox from "@/app/hooks/SizedBox";
-import { faBarsProgress, faVolumeHigh, faEllipsisVertical, faClock, faHourglass } from "@fortawesome/free-solid-svg-icons";
+import { faBarsProgress, faVolumeHigh, faEllipsisVertical, faClock, faHourglass, faTasks } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, CircularProgress, Fab } from "@mui/material";
+import { Button, CircularProgress, Fab, TextField } from "@mui/material";
 import ToolBar from "@/app/components/toolkit";
 import { ThemeColor } from "@/app/static/colors";
 import { onSnapshot, doc, getDoc, setDoc, updateDoc, deleteField } from "@firebase/firestore";
@@ -197,7 +197,9 @@ const TimerPage: React.FC = () => {
       />
     ) : (
       <div className="flex flex-col items-center gap-3">
-        <h3 className="text-[10pt] opacity-70">Ready to start: {currentTimerData.time}</h3>
+        <h3 className="text-[10pt] opacity-70" style={{
+          color:darkMode ? 'white':''
+        }}>Ready to start: {currentTimerData.time}</h3>
         <Button variant="contained" sx={{
              mt: 2 ,
              backgroundColor: ThemeColor.primary,
@@ -333,6 +335,7 @@ const TimerPage: React.FC = () => {
             
           </form>
           </div>)}
+          <div className="flex justify-center items-center">
         <ToolBar
           type={"question"}
           content={
@@ -343,24 +346,63 @@ const TimerPage: React.FC = () => {
                   <h2 className="text-[10pt]">
                     Set time to <strong>{currentTime}</strong>
                   </h2>
-                  <div className="w-72 rounded p-2 flex justify-center items-center h-10 shadow gap-2">
-                    <input type="time" value={currentTime} onChange={(e) => setCurrentTime(e.target.value)} />
-                    or
-                    <input
-                      type="text"
-                      value={currentTime}
-                      onChange={(e) => setCurrentTime(e.target.value)}
-                      placeholder="00hr:00min"
-                      className="w-full h-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
+                    <div className="w-72 rounded p-2 flex justify-center items-center h-10 shadow gap-2">
+                      {/* Editable hour input */}
+                      <input
+                        type="number"
+                        min={0}
+                        max={23}
+                        value={currentTime.split(":")[0] || "00"}
+                        onChange={(e) => {
+                          let hour = e.target.value;
+                          if (hour.length < 2) hour = hour.padStart(1, "0");
+                          const minute = currentTime.split(":")[1] || "00";
+                          setCurrentTime(`${hour}:${minute}`);
+                        }}
+                        placeholder="HH"
+                        className="w-16 h-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                      <span>:</span>
+                      {/* Editable minute input */}
+                      <input
+                        type="number"
+                        min={0}
+                        max={59}
+                        value={currentTime.split(":")[1] || "00"}
+                        onChange={(e) => {
+                          let minute = e.target.value;
+                          if (minute.length < 2) minute = minute.padStart(1, "0");
+                          const hour = currentTime.split(":")[0] || "00";
+                          setCurrentTime(`${hour}:${minute}`);
+                        }}
+                        placeholder="MM"
+                        className="w-16 h-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                      {/* Native time picker */}
+                      <input
+                        type="time"
+                        value={currentTime || "00:00"}
+                        onChange={(e) => setCurrentTime(e.target.value)}
+                        className="w-24 h-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        style={{ marginLeft: "10px" }}
+                      />
+                    </div>
+                    
                   <p className="text-[10pt]">Enter the description</p>
-                  <input
+                  <TextField
                     type="text"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Same as the target task"
+                    label="Description"
                     className="w-full h-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    slotProps={{
+                      input:{
+                        startAdornment:(
+                          <FontAwesomeIcon icon={faTasks} style={{ marginRight: 8, color: 'gray' }} />
+                        )
+                      }
+                    }}
                   />
                   <SizedBox height={10} />
                 </div>
@@ -374,6 +416,7 @@ const TimerPage: React.FC = () => {
           }
           onPressed={(index) => handleToolkitClick(index)}
         />
+        </div>
         </div>
     </>
   );

@@ -22,6 +22,8 @@ import { imgIcon } from "@/app/static/styles";
 import { ThemeColor } from "@/app/static/colors";
 import OverlayContent from "@/app/components/time_ip";
 import Journal from "@/app/components/journal";
+import { AnimatePresence } from "framer-motion";
+import {motion} from 'framer-motion';
 
 const MobileLayout:React.FC = () => {
 
@@ -80,13 +82,13 @@ const MobileLayout:React.FC = () => {
             backgroundColor: darkMode ? ThemeColor.darkMode : 'white'
         }}> 
             {isTimeUp && (<OverlayContent>
-                <div className="w-96 p-2 rounded-3xl h-[50vh] flex justify-center items-center flex-col gap-5" style={{
+                <div className="w-72 p-2 rounded-full h-[30vh] flex justify-center items-center flex-col gap-5" style={{
                     backgroundImage: 'url(/timeUp.jpg)',
                     backgroundPosition:'center',
                     backgroundRepeat:'no-repeat',
                     backgroundSize:'cover',
                 }}>
-                    <div className="w-70 h-60 rounded-2xl flex justify-center items-center" style={{
+                    <div className="w-70 h-60 rounded-full flex justify-center items-center" style={{
                         backdropFilter:'blur(4px)'
                     }}>
                         <p className="text-white font-bold text-[30pt] text-center font-serif animate-bounce">Time Up</p>
@@ -97,6 +99,7 @@ const MobileLayout:React.FC = () => {
                 </div>
             </OverlayContent>)}
             <AppBar
+             
              title={'Clarity tasks'}
              trailing={[
                 faBell,
@@ -138,7 +141,19 @@ const MobileLayout:React.FC = () => {
 
             {/* End */}
             {/* Journal */}
-            {showJournal && (<Journal/>)}
+            <AnimatePresence>
+            {showJournal && (
+                <motion.div 
+                initial={{opacity:0, y:-50}}
+                animate={{opacity:1, y:0}}
+                exit={{opacity:0, y:-50}}
+                transition={{duration:0.3}}
+                className="flex justify-center items-center h-[60] w-full p-2 fixed top-0 left-0 z-40"
+                >
+                    <Journal />
+                </motion.div>
+            )}
+            </AnimatePresence>
         
               <SizedBox height={100}/>
              <BottomNav
@@ -146,7 +161,6 @@ const MobileLayout:React.FC = () => {
               labels={['Home','Tasks','Timer','Settings']}
               onPressed={(index) => setCurrentPageIndex(index)}
               type={'image'}
-              
               />
               <Overlay/>
         </div>

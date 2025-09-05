@@ -5,6 +5,11 @@ interface timeup{
 }
 
 const OverlayContent:React.FC<timeup> = ({children}) => {
+    useEffect(() => {
+        if(navigator.vibrate){
+            navigator.vibrate(200);
+        }
+    },[]);
     return (
         <div 
             className="h-[90vh] w-full flex justify-center items-center fixed" style={{

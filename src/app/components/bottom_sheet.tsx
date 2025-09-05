@@ -25,8 +25,8 @@ const ShowBottomSheet = ({children, heightValue, style, className, onClose}:shee
             ...style
         }}>
             <div className="w-20 h-1 bg-black m-auto" style={{
-                borderTopLeftRadius:'20px',
-                borderTopRightRadius:'20px'
+                borderBottomLeftRadius:'20px',
+                borderBottomRightRadius:'20px'
             }} onClick={() => {
                 setState(prev => !prev);
             }}></div>

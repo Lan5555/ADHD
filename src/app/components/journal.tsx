@@ -4,14 +4,15 @@ import { addDoc, doc, setDoc } from "firebase/firestore";
 import { useRef } from "react";
 import { db } from "../static/firebase";
 import { useWatch } from "../hooks/page_index";
+import motion from 'framer-motion';
 
 const Journal:React.FC = () => {
     const {userId, setShowJournal, setOpen, setSnackSeverity,setSnackText} = useWatch()
     const textRef = useRef<HTMLTextAreaElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     return (
-        <div className="flex justify-center items-center h-screen w-full p-2 fixed top-0 left-0 z-40 pop-up">
-             <form className="w-full h-[70vh] flex justify-center rounded shadow bg-white p-1 font-bold flex-col gap-2 relative" onSubmit={async(e) => {
+        <div className="flex justify-center items-center h-[60] w-full p-2 fixed top-0 left-0 z-40">
+             <form className="w-full h-[90vh] flex justify-center rounded shadow bg-white p-1 font-bold flex-col gap-2 relative" onSubmit={async(e) => {
                 e.preventDefault();
                 if(!userId) return;
                     // Save to Firestore

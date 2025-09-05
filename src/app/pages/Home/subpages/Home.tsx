@@ -604,6 +604,9 @@ const Home:React.FC = () => {
               className="w-full rounded-3xl h-44 shadow relative flex justify-center items-center flex-col"
             >
               <AddComponent
+                style={{
+                  borderLeft: darkMode ? `2px solid ${ThemeColor.primary}`:''
+                }}
                 image={'/list.png'}
                 viewText="View all Journals"
                 viewCallBack={() => {
