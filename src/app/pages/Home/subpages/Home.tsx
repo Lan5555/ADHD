@@ -509,7 +509,6 @@ const Home:React.FC = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <motion.div
-                  animate={{ rotate: 360 }}
                   transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                 >
                   <FontAwesomeIcon
@@ -673,7 +672,6 @@ const Home:React.FC = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <motion.div
-                  animate={{ rotate: 360 }}
                   transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                 >
                   <FontAwesomeIcon

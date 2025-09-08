@@ -148,7 +148,7 @@ const MobileLayout:React.FC = () => {
                 animate={{opacity:1, y:0}}
                 exit={{opacity:0, y:-50}}
                 transition={{duration:0.3}}
-                className="flex justify-center items-center h-[60] w-full p-2 fixed top-0 left-0 z-40"
+                className="flex justify-center items-center h-screen w-full p-2 fixed top-0 left-0 z-40"
                 >
                     <Journal />
                 </motion.div>
