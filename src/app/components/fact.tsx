@@ -1,46 +1,73 @@
-import { faClose, faLightbulb } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import SizedBox from "../hooks/SizedBox"
-import { ThemeColor } from "../static/colors"
-import { useState } from "react"
-import { useWatch } from "../hooks/page_index"
+import { faClose, faLightbulb } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import SizedBox from "../hooks/SizedBox";
+import { ThemeColor } from "../static/colors";
+import { useWatch } from "../hooks/page_index";
 
-interface prop{
-    content:string
+interface Prop {
+  content: string;
 }
-const Fact:React.FC<prop> = ({content}) => {
-    const {isVisible, setIsVisible} = useWatch();
-    return isVisible && (
-        <div className="w-92 h-[40vh] relative flex justify-start items-center gap-2 flex-col rounded-4xl pop-up shadow-2xl" style={{
-            boxShadow:ThemeColor.shadowLg,
-            backgroundImage:'url(/blue.jpg)',
-            backgroundPosition:'center',
-            backgroundRepeat:'no-repeat',
-            backgroundSize:'cover'
-        }}>
-            <div className="w-full h-full relative flex justify-center items-center rounded-3xl p-2" style={{
-                backdropFilter:'blur(5px)'
-            }}>
-            <div className="rounded-full p-1 bg-black absolute right-3 top-3 w-8 h-8 flex justify-center items-center shadow">
-                <FontAwesomeIcon icon={faClose} color="white" onClick={() => setIsVisible(false)}/>
-            </div>
-         <FontAwesomeIcon icon={faLightbulb} color="orange" className="absolute left-5 top-15 animate-bounce" style={{
-            width:'30px',
-            height:'30px'
-         }}/>
-         <h1 className="text-3xl text-orange-500 absolute top-24 left-5 font-serif">DID YOU<br></br>KNOW?</h1>
-         <SizedBox height={10}/>
-         <p className="whitespace-pre-line absolute top-44 left-5 max-w-[70%] break-words">{content}</p>
-         <SizedBox height={10}/>
-         <div className="absolute bottom-5 flex justify-between w-72">
-            <p>Random fact</p>
-            <img src={'/dart.png'} style={{
-                height:'50px',
-                width:'50x'
-            }}/>
-            </div>
-         </div>
+
+const Fact: React.FC<Prop> = ({ content }) => {
+  const { isVisible, setIsVisible } = useWatch();
+
+  if (!isVisible) return null;
+
+  return (
+    <div
+      className="w-[23rem] h-[40vh] relative flex flex-col justify-start items-center gap-2 rounded-4xl shadow-2xl pop-up"
+      style={{
+        boxShadow: ThemeColor.shadowLg,
+        backgroundImage: "url(/blue.jpg)",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+      }}
+    >
+      <div
+        className="w-full h-full relative flex flex-col justify-center items-start rounded-3xl p-4 gap-4"
+        style={{ backdropFilter: "blur(5px)" }}
+      >
+        {/* Close Button */}
+        <button
+          className="absolute top-3 right-3 w-8 h-8 bg-black rounded-full flex justify-center items-center shadow"
+          onClick={() => setIsVisible(false)}
+        >
+          <FontAwesomeIcon icon={faClose} color="white" />
+        </button>
+
+        {/* Icon and Heading */}
+        <div className="flex items-center gap-3">
+          <FontAwesomeIcon
+            icon={faLightbulb}
+            color="orange"
+            className="animate-bounce"
+            style={{ width: "30px", height: "30px" }}
+          />
+          <h1 className="text-2xl text-orange-500 font-serif">
+            DID YOU<br />KNOW?
+          </h1>
         </div>
-    )
-}
+
+        {/* Content */}
+        <p className="whitespace-pre-line break-words max-w-full text-sm text-black leading-relaxed">
+          {content}
+        </p>
+
+        <SizedBox height={10} />
+
+        {/* Bottom Section */}
+        <div className="absolute bottom-5 left-4 right-4 flex justify-between items-center">
+          <p className="text-white">Random fact</p>
+          <img
+            src="/dart.png"
+            alt="dart icon"
+            className="h-[50px] w-[50px]"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default Fact;

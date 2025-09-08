@@ -33,6 +33,15 @@ const AppBar:React.FC<props> = ({leading,title,subtitle,trailing, onTrailingPres
         {subtitle === null ? null : (<small>{subtitle}</small>)}
         <div className="flex justify-center items-center gap-5 mr-3">
         {trailing.map((icon, index) => (
+            <div key={index}
+            className="relative flex justify-center items-center w-8 h-8 shadow"
+            style={{
+                borderRadius: '10px',
+                padding: '6px',
+                backgroundColor: darkMode ? ThemeColor.darkMode : 'white',
+            }}
+            title={index == 0 ? 'Notifications' : index == 1 ? 'Toggle Theme' : 'Journal'}
+            >
             <FontAwesomeIcon
             key={index}
              icon={icon} className={`${index == 0 ? 'text-yellow-400 text-shadow-2xs':'text-blue-400 shadow-2xl'}`} 
@@ -41,6 +50,7 @@ const AppBar:React.FC<props> = ({leading,title,subtitle,trailing, onTrailingPres
                     onTrailingPressed(index);
                 }
             }}/>
+            </div>
         ))}
         </div>
     </div>
