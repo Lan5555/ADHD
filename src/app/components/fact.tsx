@@ -58,7 +58,7 @@ const Fact: React.FC<Prop> = ({ content }) => {
 
         {/* Bottom Section */}
         <div className="absolute bottom-5 left-4 right-4 flex justify-between items-center">
-          <p className="text-white">Random fact</p>
+          <p className="text-black">Random fact</p>
           <img
             src="/dart.png"
             alt="dart icon"

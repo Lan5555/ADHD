@@ -83,7 +83,7 @@ const MobileLayout:React.FC = () => {
         }}> 
             {isTimeUp && (<OverlayContent>
                 <div className="w-72 p-2 rounded-full h-[30vh] flex justify-center items-center flex-col gap-5" style={{
-                    backgroundImage: 'url(/timeUp.jpg)',
+                    backgroundImage: 'url(/timeup.jpg)',
                     backgroundPosition:'center',
                     backgroundRepeat:'no-repeat',
                     backgroundSize:'cover',
@@ -91,7 +91,9 @@ const MobileLayout:React.FC = () => {
                     <div className="w-70 h-60 rounded-full flex justify-center items-center" style={{
                         backdropFilter:'blur(4px)'
                     }}>
-                        <p className="text-white font-bold text-[30pt] text-center font-serif animate-bounce">Time Up</p>
+                        <p className="text-white font-bold text-[30pt] text-center font-serif animate-bounce" style={{
+                            color: darkMode ? 'white' : 'black'
+                        }}>Time Up</p>
                     </div>
                     <Button variant={'contained'} onClick={() => {
                         setIsTimeUp(false);
