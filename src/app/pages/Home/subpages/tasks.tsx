@@ -287,7 +287,7 @@ useEffect(() => {
         <div className="flex justify-center items-center p-2 gap-4">
         <div 
           ref={dropDownRef}
-          className="w-58 h-9 rounded bg-gray-100 flex justify-center items-center relative" style={{
+          className="w-48 h-9 rounded bg-gray-100 flex justify-center items-center relative" style={{
             border: '1px solid rgba(0,0,0,0.1)',
         }}>
         <FontAwesomeIcon icon={faSearch} style={{
