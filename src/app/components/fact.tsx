@@ -30,7 +30,7 @@ const Fact:React.FC<prop> = ({content}) => {
          }}/>
          <h1 className="text-3xl text-orange-500 absolute top-24 left-5 font-serif">DID YOU<br></br>KNOW?</h1>
          <SizedBox height={10}/>
-         <p className="whitespace-pre-line absolute top-44 left-5">{content}</p>
+         <p className="whitespace-pre-line absolute top-44 left-5 max-w-[70%] break-words">{content}</p>
          <SizedBox height={10}/>
          <div className="absolute bottom-5 flex justify-between w-72">
             <p>Random fact</p>

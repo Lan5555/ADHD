@@ -11,7 +11,7 @@ const Journal:React.FC = () => {
     const textRef = useRef<HTMLTextAreaElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     return (
-        <div className="flex justify-center items-center h-[60] w-full p-2 fixed top-0 left-0 z-40">
+        <div className="flex justify-center items-center h-[90vh] w-full p-2 fixed top-0 left-0 z-40">
              <form className="w-full h-[90vh] flex justify-center rounded shadow bg-white p-1 font-bold flex-col gap-2 relative" onSubmit={async(e) => {
                 e.preventDefault();
                 if(!userId) return;
